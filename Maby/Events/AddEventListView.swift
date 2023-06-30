@@ -1,47 +1,51 @@
 import Combine
 import MabyKit
 import SwiftUI
+import ScalingHeaderScrollView
 
 struct AddEventListView: View {
+    
     var body: some View {
-        List {
+        VStack {
             BabyCard()
                 .clearBackground()
-            
-            Section("Feeding") {
-                AddEventButton<NursingEvent>(
-                    "Add nursing",
-                    icon: "🤱",
-                    type: .nursing
-                )
-                
-                AddEventButton<BottleFeedEvent>(
-                    "Add bottle feed",
-                    icon: "🍼",
-                    type: .bottle
-                )
-            }
-            
-            Section("Hygiene") {
-                AddEventButton<DiaperEvent>(
-                    "Add diaper change",
-                    icon: "🧷",
-                    type: .diaper
-                )
-            }
-            
-            Section("Health") {
-                AddEventButton<SleepEvent>(
-                    "Add sleep",
-                    icon: "🌝",
-                    type: .sleep
-                )
-                
-                AddEventButton<VomitEvent>(
-                    "Add vomit",
-                    icon: "🤢",
-                    type: .vomit
-                )
+                .padding(.horizontal, 16)
+            List {
+                Section("Feeding") {
+                    AddEventButton<NursingEvent>(
+                        "Add nursing",
+                        icon: "🤱",
+                        type: .nursing
+                    )
+
+                    AddEventButton<BottleFeedEvent>(
+                        "Add bottle feed",
+                        icon: "🍼",
+                        type: .bottle
+                    )
+                }
+
+                Section("Hygiene") {
+                    AddEventButton<DiaperEvent>(
+                        "Add diaper change",
+                        icon: "🧷",
+                        type: .diaper
+                    )
+                }
+
+                Section("Health") {
+                    AddEventButton<SleepEvent>(
+                        "Add sleep",
+                        icon: "🌝",
+                        type: .sleep
+                    )
+
+                    AddEventButton<VomitEvent>(
+                        "Add vomit",
+                        icon: "🤢",
+                        type: .vomit
+                    )
+                }
             }
         }
     }

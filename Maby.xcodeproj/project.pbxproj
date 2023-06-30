@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9BB2D44B2A4E397C002DA4CA /* AnimatedTabBar in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB2D44A2A4E397C002DA4CA /* AnimatedTabBar */; };
+		9BB2D44D2A4E9C7D002DA4CA /* ColorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2D44C2A4E9C7D002DA4CA /* ColorButton.swift */; };
+		9BB2D4502A4EB1BB002DA4CA /* ScalingHeaderScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB2D44F2A4EB1BB002DA4CA /* ScalingHeaderScrollView */; };
 		C901566A2884DF1000DAC7E7 /* AddDiaperEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90156692884DF1000DAC7E7 /* AddDiaperEventView.swift */; };
 		C901566C2884DF5500DAC7E7 /* AddEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C901566B2884DF5500DAC7E7 /* AddEventView.swift */; };
 		C901566E2884E38000DAC7E7 /* AddSleepEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C901566D2884E37F00DAC7E7 /* AddSleepEventView.swift */; };
@@ -71,6 +74,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9BB2D44C2A4E9C7D002DA4CA /* ColorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorButton.swift; sourceTree = "<group>"; };
 		C90156692884DF1000DAC7E7 /* AddDiaperEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDiaperEventView.swift; sourceTree = "<group>"; };
 		C901566B2884DF5500DAC7E7 /* AddEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventView.swift; sourceTree = "<group>"; };
 		C901566D2884E37F00DAC7E7 /* AddSleepEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSleepEventView.swift; sourceTree = "<group>"; };
@@ -126,8 +130,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BB2D44B2A4E397C002DA4CA /* AnimatedTabBar in Frameworks */,
 				C9ED2ED5287C98C000BA3228 /* MabyKit in Frameworks */,
 				C9ED2EDB287C995300BA3228 /* Factory in Frameworks */,
+				9BB2D4502A4EB1BB002DA4CA /* ScalingHeaderScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,6 +251,7 @@
 				C9B95D15287DF50D00ADC43F /* BabyCard.swift */,
 				C9ED2EA1287C745100BA3228 /* MabyApp.swift */,
 				C9ED2EA8287C745100BA3228 /* ContentView.swift */,
+				9BB2D44C2A4E9C7D002DA4CA /* ColorButton.swift */,
 				C9ED2EAA287C745300BA3228 /* Assets.xcassets */,
 				C9ED2EAC287C745300BA3228 /* Maby.entitlements */,
 				C9ED2EAD287C745300BA3228 /* Preview Content */,
@@ -309,6 +316,8 @@
 			packageProductDependencies = (
 				C9ED2ED4287C98C000BA3228 /* MabyKit */,
 				C9ED2EDA287C995300BA3228 /* Factory */,
+				9BB2D44A2A4E397C002DA4CA /* AnimatedTabBar */,
+				9BB2D44F2A4EB1BB002DA4CA /* ScalingHeaderScrollView */,
 			);
 			productName = Maby;
 			productReference = C9ED2E9E287C745100BA3228 /* Maby.app */;
@@ -343,6 +352,8 @@
 			mainGroup = C9ED2E95287C745100BA3228;
 			packageReferences = (
 				C9ED2ED9287C995300BA3228 /* XCRemoteSwiftPackageReference "Factory" */,
+				9BB2D4492A4E397C002DA4CA /* XCRemoteSwiftPackageReference "AnimatedTabBar" */,
+				9BB2D44E2A4EB1BB002DA4CA /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */,
 			);
 			productRefGroup = C9ED2E9F287C745100BA3228 /* Products */;
 			projectDirPath = "";
@@ -403,6 +414,7 @@
 				C9D2C0832880D1DC00F85D8F /* EventView.swift in Sources */,
 				C9ED2EA2287C745100BA3228 /* MabyApp.swift in Sources */,
 				C969734B2881B0FA00156287 /* AddEventView.swift in Sources */,
+				9BB2D44D2A4E9C7D002DA4CA /* ColorButton.swift in Sources */,
 				C90F725C28884379005FF2AB /* BabyDetailsFormView.swift in Sources */,
 				C953DD41287F011B00F1E1B7 /* AddDiaperEventView.swift in Sources */,
 				C953DD3D287E0C0700F1E1B7 /* AddEventListView.swift in Sources */,
@@ -622,7 +634,7 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -658,7 +670,7 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -708,6 +720,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		9BB2D4492A4E397C002DA4CA /* XCRemoteSwiftPackageReference "AnimatedTabBar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/AnimatedTabBar.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.1;
+			};
+		};
+		9BB2D44E2A4EB1BB002DA4CA /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/ScalingHeaderScrollView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.5;
+			};
+		};
 		C9ED2ED9287C995300BA3228 /* XCRemoteSwiftPackageReference "Factory" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hmlongco/Factory";
@@ -719,6 +747,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		9BB2D44A2A4E397C002DA4CA /* AnimatedTabBar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9BB2D4492A4E397C002DA4CA /* XCRemoteSwiftPackageReference "AnimatedTabBar" */;
+			productName = AnimatedTabBar;
+		};
+		9BB2D44F2A4EB1BB002DA4CA /* ScalingHeaderScrollView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9BB2D44E2A4EB1BB002DA4CA /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */;
+			productName = ScalingHeaderScrollView;
+		};
 		C938D90E288454440041A3FA /* Factory */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9ED2ED9287C995300BA3228 /* XCRemoteSwiftPackageReference "Factory" */;

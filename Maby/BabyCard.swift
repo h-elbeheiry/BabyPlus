@@ -21,12 +21,13 @@ struct BabyCard: View {
         VStack {
             HStack {
                 Text("👶🏻")
-                    .font(.system(size: 80))
-                    .padding([.trailing], 20)
+                    .font(.system(size: 48))
+                    .padding([.trailing], 16)
                 
                 VStack(alignment: .leading) {
                     Text(name)
                         .font(.title)
+                        .foregroundColor(.white)
                     
                     Text("\(age) old")
                         .font(.callout)
@@ -36,7 +37,8 @@ struct BabyCard: View {
             .padding()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.gray.opacity(0.2))
+        .background(LinearGradient(gradient:
+                                    Gradient(colors: [Color.hex("#2B27F3"), Color.hex("#872AFD")]), startPoint: .topLeading, endPoint: .bottomTrailing))
         .cornerRadius(10)
         .shadow(radius: 8)
     }
