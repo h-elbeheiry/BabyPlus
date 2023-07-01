@@ -12,8 +12,6 @@ struct ContentView: View {
     @State private var selectedIndex = 0
     @State private var prevSelectedIndex = 0
 
-    let names = ["heart", "leaf", "drop", "circle", "book"]
-    
     private let databaseUpdates = NotificationCenter.default.publisher(
         for: .NSManagedObjectContextDidSave
     )
@@ -30,8 +28,8 @@ struct ContentView: View {
             VStack {
                 AnimatedTabBar(selectedIndex: $selectedIndex, prevSelectedIndex: $prevSelectedIndex) {
                     colorButtonAt(0, type: .bell)
-                    colorButtonAt(1, type: .calendar)
-                    colorButtonAt(2, type: .gear)
+                    colorButtonAt(4, type: .bell)
+                    colorButtonAt(5, type: .gear)
                 }
                 .cornerRadius(16)
                 .selectedColor(.exampleGrey)
@@ -42,6 +40,10 @@ struct ContentView: View {
                 .ballAnimation(.interpolatingSpring(stiffness: 130, damping: 15))
                 .indentAnimation(.easeOut(duration: 0.3))
                 .padding(.horizontal, 16)
+                .onTapGesture {
+                    let haptic = UIImpactFeedbackGenerator(style: .medium)
+                    haptic.impactOccurred()
+                }
             }
         }
         .sheet(isPresented: $showingAddBaby) {
