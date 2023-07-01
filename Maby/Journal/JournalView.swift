@@ -15,9 +15,6 @@ struct JournalView: View {
     
     var body: some View {
         List {
-            BabyCard()
-                .clearBackground()
-            
             ForEach(events) { section in
                 Section(header: JournalSectionHeader(date: section.id)) {
                     ForEach(section) { event in

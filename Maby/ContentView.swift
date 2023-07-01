@@ -18,18 +18,23 @@ struct ContentView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            if selectedIndex == 0 {
-                AddEventListView()
-            } else if selectedIndex == 1 {
-                JournalView()
-            } else if selectedIndex == 2 {
-                SettingsView()
+            VStack {
+                BabyCard()
+                    .clearBackground()
+                    .padding(.horizontal, 16)
+                if selectedIndex == 0 {
+                    AddEventListView()
+                } else if selectedIndex == 1 {
+                    JournalView()
+                } else if selectedIndex == 2 {
+                    SettingsView()
+                }
             }
             VStack {
                 AnimatedTabBar(selectedIndex: $selectedIndex, prevSelectedIndex: $prevSelectedIndex) {
                     colorButtonAt(0, type: .bell)
-                    colorButtonAt(4, type: .bell)
-                    colorButtonAt(5, type: .gear)
+                    colorButtonAt(1, type: .bell)
+                    colorButtonAt(2, type: .gear)
                 }
                 .cornerRadius(16)
                 .selectedColor(.exampleGrey)

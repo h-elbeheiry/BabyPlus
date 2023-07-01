@@ -7,9 +7,6 @@ struct AddEventListView: View {
     
     var body: some View {
         VStack {
-            BabyCard()
-                .clearBackground()
-                .padding(.horizontal, 16)
             List {
                 Section("Feeding") {
                     AddEventButton<NursingEvent>(

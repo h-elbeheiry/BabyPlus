@@ -28,9 +28,6 @@ struct SettingsView: View {
     
     var body: some View {
         List {
-            BabyCard()
-                .clearBackground()
-            
             Section("Baby") {
                 Button(action: { showingEditBaby.toggle() }) {
                     Label("Edit baby details", systemImage: "info.square.fill")
@@ -53,7 +50,7 @@ struct SettingsView: View {
                 Text("Maby \(version)")
                 
                 Text(
-                    "Made with \(Image(systemName: "heart.fill").symbolRenderingMode(.multicolor)) by Fran González"
+                    "Made with \(Image(systemName: "heart.fill").symbolRenderingMode(.multicolor)) by Hussein using Maby"
                 )
             }
             .foregroundColor(.gray)
