@@ -4,10 +4,6 @@ struct SettingsView: View {
     @State private var showingEditBaby = false
     @State private var showingRemoveBaby = false
     
-    private var sourceCodeUrl: URL {
-        return URL(string: "https://github.com/sleepyfran/maby/")!
-    }
-    
     private var version: String {
         let infoDictionary = Bundle.main.infoDictionary
         
@@ -35,13 +31,6 @@ struct SettingsView: View {
                 
                 Button(action: { showingRemoveBaby.toggle() }) {
                     Label("Remove baby", systemImage: "trash.square.fill")
-                        .symbolRenderingMode(.multicolor)
-                }
-            }
-            
-            Section("About") {
-                Link(destination: sourceCodeUrl) {
-                    Label("Open source code", systemImage: "arrow.up.right.square.fill")
                         .symbolRenderingMode(.multicolor)
                 }
             }

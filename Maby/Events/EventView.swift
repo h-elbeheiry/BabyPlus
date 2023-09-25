@@ -157,7 +157,7 @@ private struct NursingEventDetails: View {
         (event.start..<event.end).formatted(
             .components(
                 style: .narrow,
-                fields: [.hour, .minute]
+                fields: [.hour, .minute, .second]
             )
         )
     }

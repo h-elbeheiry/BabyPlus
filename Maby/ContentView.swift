@@ -5,6 +5,8 @@ import SwiftUI
 import AnimatedTabBar
 
 struct ContentView: View {
+    @Environment(\.colorScheme) var colorScheme
+    @ObservedObject private var nursingTimer = NursingTimer()
     @FetchRequest(fetchRequest: allBabies)
     private var babies: FetchedResults<Baby>
     
@@ -22,8 +24,19 @@ struct ContentView: View {
                 BabyCard()
                     .clearBackground()
                     .padding(.horizontal, 16)
+                if nursingTimer.state != .idle {
+                    TimerCapsuleView(
+                        duration: nursingTimer.duration,
+                        stopAction: {
+                            withAnimation {
+                                nursingTimer.stop()
+                                nursingTimer.state = .idle
+                            }
+                        }
+                    )
+                }
                 if selectedIndex == 0 {
-                    AddEventListView()
+                    AddEventListView(nursingTimer: nursingTimer)
                 } else if selectedIndex == 1 {
                     JournalView()
                 } else if selectedIndex == 2 {
@@ -36,6 +49,7 @@ struct ContentView: View {
                     colorButtonAt(1, type: .bell)
                     colorButtonAt(2, type: .gear)
                 }
+                .barColor(colorScheme == .dark ? .examplePurple : .white)
                 .cornerRadius(16)
                 .selectedColor(.exampleGrey)
                 .unselectedColor(.exampleLightGrey)
@@ -92,9 +106,11 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
             .mockedDependencies()
             .previewDisplayName("With data")
-        
+            .preferredColorScheme(.dark)
+
         ContentView()
             .mockedDependencies(empty: true)
             .previewDisplayName("Without data")
+            .preferredColorScheme(.dark)
     }
 }

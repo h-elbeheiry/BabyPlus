@@ -5,7 +5,7 @@ import Foundation
 /// just an easy way to represent them in the UI and this package without instantiating an actual sub-class
 /// of the event.
 public enum EventType {
-    case bottle, diaper, nursing, sleep, vomit
+    case bottle, diaper, nursing, sleep, vomit, nursingTimer
 }
 
 /// Represents an event with its start date. Do not use this entity directly, instead use one of the specific

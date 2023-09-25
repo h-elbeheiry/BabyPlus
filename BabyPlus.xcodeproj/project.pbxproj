@@ -7,9 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B38B8D62AC1FB2B0041AE64 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B38B8D52AC1FB2B0041AE64 /* CircularProgressView.swift */; };
+		9B38B8D82AC1FFB20041AE64 /* BreastPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B38B8D72AC1FFB20041AE64 /* BreastPickerView.swift */; };
+		9B38B8DA2AC210760041AE64 /* NursingTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B38B8D92AC210760041AE64 /* NursingTimer.swift */; };
+		9B38B8DC2AC2112C0041AE64 /* TimerCapsuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B38B8DB2AC2112C0041AE64 /* TimerCapsuleView.swift */; };
 		9BB2D44B2A4E397C002DA4CA /* AnimatedTabBar in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB2D44A2A4E397C002DA4CA /* AnimatedTabBar */; };
 		9BB2D44D2A4E9C7D002DA4CA /* ColorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2D44C2A4E9C7D002DA4CA /* ColorButton.swift */; };
 		9BB2D4502A4EB1BB002DA4CA /* ScalingHeaderScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB2D44F2A4EB1BB002DA4CA /* ScalingHeaderScrollView */; };
+		9BF807692A63AA6F00FBDB8E /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF807662A63AA6F00FBDB8E /* ColorExtension.swift */; };
+		9BF8076A2A63AA6F00FBDB8E /* MontserratFontModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF807672A63AA6F00FBDB8E /* MontserratFontModifier.swift */; };
+		9BF8076B2A63AA6F00FBDB8E /* HelperMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF807682A63AA6F00FBDB8E /* HelperMethods.swift */; };
 		C901566A2884DF1000DAC7E7 /* AddDiaperEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90156692884DF1000DAC7E7 /* AddDiaperEventView.swift */; };
 		C901566C2884DF5500DAC7E7 /* AddEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C901566B2884DF5500DAC7E7 /* AddEventView.swift */; };
 		C901566E2884E38000DAC7E7 /* AddSleepEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C901566D2884E37F00DAC7E7 /* AddSleepEventView.swift */; };
@@ -74,7 +81,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9B38B8D52AC1FB2B0041AE64 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
+		9B38B8D72AC1FFB20041AE64 /* BreastPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreastPickerView.swift; sourceTree = "<group>"; };
+		9B38B8D92AC210760041AE64 /* NursingTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NursingTimer.swift; sourceTree = "<group>"; };
+		9B38B8DB2AC2112C0041AE64 /* TimerCapsuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCapsuleView.swift; sourceTree = "<group>"; };
 		9BB2D44C2A4E9C7D002DA4CA /* ColorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorButton.swift; sourceTree = "<group>"; };
+		9BF807662A63AA6F00FBDB8E /* ColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		9BF807672A63AA6F00FBDB8E /* MontserratFontModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MontserratFontModifier.swift; sourceTree = "<group>"; };
+		9BF807682A63AA6F00FBDB8E /* HelperMethods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperMethods.swift; sourceTree = "<group>"; };
 		C90156692884DF1000DAC7E7 /* AddDiaperEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDiaperEventView.swift; sourceTree = "<group>"; };
 		C901566B2884DF5500DAC7E7 /* AddEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventView.swift; sourceTree = "<group>"; };
 		C901566D2884E37F00DAC7E7 /* AddSleepEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSleepEventView.swift; sourceTree = "<group>"; };
@@ -140,6 +154,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9BF8076C2A63AA7600FBDB8E /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				9BF807662A63AA6F00FBDB8E /* ColorExtension.swift */,
+				9BF807682A63AA6F00FBDB8E /* HelperMethods.swift */,
+				9BF807672A63AA6F00FBDB8E /* MontserratFontModifier.swift */,
+				9B38B8D52AC1FB2B0041AE64 /* CircularProgressView.swift */,
+				9B38B8D92AC210760041AE64 /* NursingTimer.swift */,
+				9B38B8DB2AC2112C0041AE64 /* TimerCapsuleView.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		C90F725628883B10005FF2AB /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -177,6 +204,7 @@
 				C9D2C0822880D1DC00F85D8F /* EventView.swift */,
 				C969734C2881EF4400156287 /* AddVomitEventView.swift */,
 				C90F725F2888B0DE005FF2AB /* AddBottleFeedEventView.swift */,
+				9B38B8D72AC1FFB20041AE64 /* BreastPickerView.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -244,6 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				C91DF4B02884D6110014F602 /* Info.plist */,
+				9BF8076C2A63AA7600FBDB8E /* Helpers */,
 				C90F725628883B10005FF2AB /* Settings */,
 				C953DD39287E0B3E00F1E1B7 /* Events */,
 				C9B95D0B287DA6BF00ADC43F /* Journal */,
@@ -407,6 +436,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B38B8D62AC1FB2B0041AE64 /* CircularProgressView.swift in Sources */,
 				C90F725828883B1B005FF2AB /* SettingsView.swift in Sources */,
 				C953DD43287F206400F1E1B7 /* AddNursingEventView.swift in Sources */,
 				C9B95D12287DA9D000ADC43F /* AddBabyView.swift in Sources */,
@@ -417,15 +447,21 @@
 				9BB2D44D2A4E9C7D002DA4CA /* ColorButton.swift in Sources */,
 				C90F725C28884379005FF2AB /* BabyDetailsFormView.swift in Sources */,
 				C953DD41287F011B00F1E1B7 /* AddDiaperEventView.swift in Sources */,
+				9B38B8DC2AC2112C0041AE64 /* TimerCapsuleView.swift in Sources */,
+				9BF8076B2A63AA6F00FBDB8E /* HelperMethods.swift in Sources */,
 				C953DD3D287E0C0700F1E1B7 /* AddEventListView.swift in Sources */,
 				C90F725E28884DD6005FF2AB /* RemoveBabyView.swift in Sources */,
+				9BF8076A2A63AA6F00FBDB8E /* MontserratFontModifier.swift in Sources */,
+				9BF807692A63AA6F00FBDB8E /* ColorExtension.swift in Sources */,
 				C90F725A2888432A005FF2AB /* EditBabyDetailsView.swift in Sources */,
 				C9B95D09287CA02400ADC43F /* View+Extensions.swift in Sources */,
+				9B38B8DA2AC210760041AE64 /* NursingTimer.swift in Sources */,
 				C90F72602888B0DE005FF2AB /* AddBottleFeedEventView.swift in Sources */,
 				C969734D2881EF4400156287 /* AddVomitEventView.swift in Sources */,
 				C9B95D14287DAD9C00ADC43F /* ButtonStyles.swift in Sources */,
 				C953DD45287F253800F1E1B7 /* AddSleepEventView.swift in Sources */,
 				C9B95D0D287DA6C800ADC43F /* JournalView.swift in Sources */,
+				9B38B8D82AC1FFB20041AE64 /* BreastPickerView.swift in Sources */,
 				C9ED2EA9287C745100BA3228 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
