@@ -2,60 +2,77 @@ import Factory
 import MabyKit
 import SwiftUI
 
+/// Deleting a baby wipes every entry with it, so the sheet asks for the name to be
+/// confirmed rather than relying on a single red button.
 struct RemoveBabyView: View {
     @Injected(Container.babyService) private var babyService
-    
     @Environment(\.dismiss) private var dismiss
-    
-    @FetchRequest private var babies: FetchedResults<Baby>
-    
-    init() {
-        self._babies = FetchRequest(fetchRequest: allBabies)
-    }
-    
-    private var baby: Baby? {
-        babies.first
-    }
-    
-    private func onRemove() {
-        if baby == nil {
-            return
-        }
-        
-        babyService.remove(baby: baby!)
+
+    @FetchRequest(fetchRequest: allBabies)
+    private var babies: FetchedResults<Baby>
+
+    @State private var confirmed = false
+
+    private var baby: Baby? { babies.first }
+
+    private func remove() {
+        guard let baby else { return }
+        babyService.remove(baby: baby)
+        Haptics.warning()
         dismiss()
     }
-    
+
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Remove \(baby?.name ?? "")")
-                .font(.title)
-                .bold()
-            
-            Text("This will remove all data related to the baby and **cannot** be undone. Are you sure?")
-            
-            Button(action: onRemove) {
-                Text("Yes, delete it")
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 12) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.title2)
+                    .foregroundStyle(.red)
+
+                Text("Remove \(baby?.name ?? "this baby")?")
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(Palette.ink)
             }
-            .buttonStyle(.primaryAction)
+
+            Text("This deletes every feed, nap, change and note along with the profile. It cannot be undone, and it removes them from iCloud too.")
+                .font(.subheadline)
+                .foregroundStyle(Palette.inkSoft)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Toggle(isOn: $confirmed.animation(Motion.snappy)) {
+                Text("I understand this can't be undone")
+                    .font(.footnote)
+                    .foregroundStyle(Palette.ink)
+            }
             .tint(.red)
-            
-            Button(action: { dismiss() }) {
-                Text("No! Cancel")
+
+            VStack(spacing: 10) {
+                Button(role: .destructive, action: remove) {
+                    Text("Delete everything")
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 4)
+                }
+                .glassButtonStyle(prominent: true, tint: .red)
+                .controlSize(.large)
+                .disabled(!confirmed)
+                .opacity(confirmed ? 1 : 0.5)
+
+                Button("Keep everything") { dismiss() }
+                    .glassButtonStyle()
+                    .controlSize(.large)
+                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.secondaryAction)
+            .padding(.top, 2)
         }
-        .padding()
+        .padding(22)
+        .frame(maxHeight: .infinity, alignment: .top)
     }
 }
 
-struct RemoveBabyView_Previews: PreviewProvider {
-    static var previews: some View {
-        Text("Test")
-            .sheet(isPresented: Binding.constant(true)) {
-                RemoveBabyView()
-                    .sheetSize(.medium)
-                    .mockedDependencies()
-            }
-    }
+#if DEBUG
+#Preview {
+    RemoveBabyView()
+        .mockedDependencies()
 }
+#endif

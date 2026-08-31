@@ -7,16 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9B38B8D62AC1FB2B0041AE64 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B38B8D52AC1FB2B0041AE64 /* CircularProgressView.swift */; };
-		9B38B8D82AC1FFB20041AE64 /* BreastPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B38B8D72AC1FFB20041AE64 /* BreastPickerView.swift */; };
-		9B38B8DA2AC210760041AE64 /* NursingTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B38B8D92AC210760041AE64 /* NursingTimer.swift */; };
-		9B38B8DC2AC2112C0041AE64 /* TimerCapsuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B38B8DB2AC2112C0041AE64 /* TimerCapsuleView.swift */; };
-		9BB2D44B2A4E397C002DA4CA /* AnimatedTabBar in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB2D44A2A4E397C002DA4CA /* AnimatedTabBar */; };
-		9BB2D44D2A4E9C7D002DA4CA /* ColorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2D44C2A4E9C7D002DA4CA /* ColorButton.swift */; };
-		9BB2D4502A4EB1BB002DA4CA /* ScalingHeaderScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 9BB2D44F2A4EB1BB002DA4CA /* ScalingHeaderScrollView */; };
-		9BF807692A63AA6F00FBDB8E /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF807662A63AA6F00FBDB8E /* ColorExtension.swift */; };
-		9BF8076A2A63AA6F00FBDB8E /* MontserratFontModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF807672A63AA6F00FBDB8E /* MontserratFontModifier.swift */; };
-		9BF8076B2A63AA6F00FBDB8E /* HelperMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF807682A63AA6F00FBDB8E /* HelperMethods.swift */; };
+		C0DE00000000000000000002 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000001 /* Theme.swift */; };
+		C0DE00000000000000000004 /* LiquidGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000003 /* LiquidGlass.swift */; };
+		C0DE00000000000000000006 /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000005 /* Motion.swift */; };
+		C0DE00000000000000000008 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000007 /* Haptics.swift */; };
+		C0DE0000000000000000000A /* AuroraBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000009 /* AuroraBackground.swift */; };
+		C0DE0000000000000000000C /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000000B /* Components.swift */; };
+		C0DE0000000000000000000E /* AppPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000000D /* AppPreferences.swift */; };
+		C0DE00000000000000000010 /* ToastCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000000F /* ToastCenter.swift */; };
+		C0DE00000000000000000013 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000012 /* HomeView.swift */; };
+		C0DE00000000000000000015 /* QuickLogTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000014 /* QuickLogTile.swift */; };
+		C0DE00000000000000000017 /* BabyHeroCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000016 /* BabyHeroCard.swift */; };
+		C0DE00000000000000000019 /* LiveSessionCapsule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000018 /* LiveSessionCapsule.swift */; };
+		C0DE0000000000000000001C /* InsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000001B /* InsightsView.swift */; };
+		C0DE0000000000000000001E /* InsightCharts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000001D /* InsightCharts.swift */; };
+		C0DE00000000000000000021 /* OnboardingFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000020 /* OnboardingFlow.swift */; };
+		C0DE00000000000000000023 /* OnboardingStepViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000022 /* OnboardingStepViews.swift */; };
+		C0DE00000000000000000025 /* UIShowcase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000024 /* UIShowcase.swift */; };
+		C0DE00000000000000000028 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000027 /* PaywallView.swift */; };
+		C0DE0000000000000000002A /* PaywallPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00000000000000000029 /* PaywallPresenter.swift */; };
+		C0DE0000000000000000002D /* LiveSessionTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000002C /* LiveSessionTimer.swift */; };
+		C0DE0000000000000000002F /* TimelineRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE0000000000000000002E /* TimelineRow.swift */; };
 		C901566A2884DF1000DAC7E7 /* AddDiaperEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90156692884DF1000DAC7E7 /* AddDiaperEventView.swift */; };
 		C901566C2884DF5500DAC7E7 /* AddEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C901566B2884DF5500DAC7E7 /* AddEventView.swift */; };
 		C901566E2884E38000DAC7E7 /* AddSleepEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C901566D2884E37F00DAC7E7 /* AddSleepEventView.swift */; };
@@ -31,7 +42,6 @@
 		C938D90928844CE40041A3FA /* AddEventListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C938D90828844CE40041A3FA /* AddEventListView.swift */; };
 		C938D90D28844F0A0041A3FA /* AddNursingEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C938D90C28844F0A0041A3FA /* AddNursingEventView.swift */; };
 		C938D90F288454440041A3FA /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = C938D90E288454440041A3FA /* Factory */; };
-		C953DD3D287E0C0700F1E1B7 /* AddEventListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C953DD3C287E0C0700F1E1B7 /* AddEventListView.swift */; };
 		C953DD41287F011B00F1E1B7 /* AddDiaperEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C953DD40287F011B00F1E1B7 /* AddDiaperEventView.swift */; };
 		C953DD43287F206400F1E1B7 /* AddNursingEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C953DD42287F206400F1E1B7 /* AddNursingEventView.swift */; };
 		C953DD45287F253800F1E1B7 /* AddSleepEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C953DD44287F253800F1E1B7 /* AddSleepEventView.swift */; };
@@ -45,9 +55,6 @@
 		C9B95D09287CA02400ADC43F /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B95D08287CA02400ADC43F /* View+Extensions.swift */; };
 		C9B95D0D287DA6C800ADC43F /* JournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B95D0C287DA6C800ADC43F /* JournalView.swift */; };
 		C9B95D12287DA9D000ADC43F /* AddBabyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B95D11287DA9D000ADC43F /* AddBabyView.swift */; };
-		C9B95D14287DAD9C00ADC43F /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B95D13287DAD9C00ADC43F /* ButtonStyles.swift */; };
-		C9B95D16287DF50D00ADC43F /* BabyCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B95D15287DF50D00ADC43F /* BabyCard.swift */; };
-		C9D2C0832880D1DC00F85D8F /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D2C0822880D1DC00F85D8F /* EventView.swift */; };
 		C9ED2EA2287C745100BA3228 /* MabyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ED2EA1287C745100BA3228 /* MabyApp.swift */; };
 		C9ED2EA9287C745100BA3228 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9ED2EA8287C745100BA3228 /* ContentView.swift */; };
 		C9ED2EAB287C745300BA3228 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9ED2EAA287C745300BA3228 /* Assets.xcassets */; };
@@ -81,14 +88,28 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		9B38B8D52AC1FB2B0041AE64 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
-		9B38B8D72AC1FFB20041AE64 /* BreastPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreastPickerView.swift; sourceTree = "<group>"; };
-		9B38B8D92AC210760041AE64 /* NursingTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NursingTimer.swift; sourceTree = "<group>"; };
-		9B38B8DB2AC2112C0041AE64 /* TimerCapsuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCapsuleView.swift; sourceTree = "<group>"; };
-		9BB2D44C2A4E9C7D002DA4CA /* ColorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorButton.swift; sourceTree = "<group>"; };
-		9BF807662A63AA6F00FBDB8E /* ColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
-		9BF807672A63AA6F00FBDB8E /* MontserratFontModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MontserratFontModifier.swift; sourceTree = "<group>"; };
-		9BF807682A63AA6F00FBDB8E /* HelperMethods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperMethods.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000001 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000003 /* LiquidGlass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlass.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000005 /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000007 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000009 /* AuroraBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuroraBackground.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000000B /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000000D /* AppPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreferences.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000000F /* ToastCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastCenter.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000012 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000014 /* QuickLogTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLogTile.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000016 /* BabyHeroCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BabyHeroCard.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000018 /* LiveSessionCapsule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSessionCapsule.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000001B /* InsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsView.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000001D /* InsightCharts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightCharts.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000020 /* OnboardingFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlow.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000022 /* OnboardingStepViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStepViews.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000024 /* UIShowcase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIShowcase.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000027 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000029 /* PaywallPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallPresenter.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000002C /* LiveSessionTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSessionTimer.swift; sourceTree = "<group>"; };
+		C0DE0000000000000000002E /* TimelineRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineRow.swift; sourceTree = "<group>"; };
+		C0DE00000000000000000030 /* BabyPlus.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = BabyPlus.storekit; path = ../BabyPlus.storekit; sourceTree = "<group>"; };
 		C90156692884DF1000DAC7E7 /* AddDiaperEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDiaperEventView.swift; sourceTree = "<group>"; };
 		C901566B2884DF5500DAC7E7 /* AddEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventView.swift; sourceTree = "<group>"; };
 		C901566D2884E37F00DAC7E7 /* AddSleepEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSleepEventView.swift; sourceTree = "<group>"; };
@@ -104,7 +125,6 @@
 		C91DF4B22884D6560014F602 /* BabyPlusWatch-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BabyPlusWatch-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		C938D90828844CE40041A3FA /* AddEventListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventListView.swift; sourceTree = "<group>"; };
 		C938D90C28844F0A0041A3FA /* AddNursingEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNursingEventView.swift; sourceTree = "<group>"; };
-		C953DD3C287E0C0700F1E1B7 /* AddEventListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventListView.swift; sourceTree = "<group>"; };
 		C953DD40287F011B00F1E1B7 /* AddDiaperEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDiaperEventView.swift; sourceTree = "<group>"; };
 		C953DD42287F206400F1E1B7 /* AddNursingEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNursingEventView.swift; sourceTree = "<group>"; };
 		C953DD44287F253800F1E1B7 /* AddSleepEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSleepEventView.swift; sourceTree = "<group>"; };
@@ -118,9 +138,6 @@
 		C9B95D08287CA02400ADC43F /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		C9B95D0C287DA6C800ADC43F /* JournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalView.swift; sourceTree = "<group>"; };
 		C9B95D11287DA9D000ADC43F /* AddBabyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBabyView.swift; sourceTree = "<group>"; };
-		C9B95D13287DAD9C00ADC43F /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
-		C9B95D15287DF50D00ADC43F /* BabyCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BabyCard.swift; sourceTree = "<group>"; };
-		C9D2C0822880D1DC00F85D8F /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		C9ED2E9E287C745100BA3228 /* BabyPlus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BabyPlus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9ED2EA1287C745100BA3228 /* MabyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MabyApp.swift; sourceTree = "<group>"; };
 		C9ED2EA8287C745100BA3228 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -144,25 +161,72 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9BB2D44B2A4E397C002DA4CA /* AnimatedTabBar in Frameworks */,
 				C9ED2ED5287C98C000BA3228 /* MabyKit in Frameworks */,
 				C9ED2EDB287C995300BA3228 /* Factory in Frameworks */,
-				9BB2D4502A4EB1BB002DA4CA /* ScalingHeaderScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C0DE00000000000000000011 /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE00000000000000000001 /* Theme.swift */,
+				C0DE00000000000000000003 /* LiquidGlass.swift */,
+				C0DE00000000000000000005 /* Motion.swift */,
+				C0DE00000000000000000007 /* Haptics.swift */,
+				C0DE00000000000000000009 /* AuroraBackground.swift */,
+				C0DE0000000000000000000B /* Components.swift */,
+				C0DE0000000000000000000D /* AppPreferences.swift */,
+				C0DE0000000000000000000F /* ToastCenter.swift */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
+		C0DE0000000000000000001A /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE00000000000000000012 /* HomeView.swift */,
+				C0DE00000000000000000014 /* QuickLogTile.swift */,
+				C0DE00000000000000000016 /* BabyHeroCard.swift */,
+				C0DE00000000000000000018 /* LiveSessionCapsule.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		C0DE0000000000000000001F /* Insights */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE0000000000000000001B /* InsightsView.swift */,
+				C0DE0000000000000000001D /* InsightCharts.swift */,
+			);
+			path = Insights;
+			sourceTree = "<group>";
+		};
+		C0DE00000000000000000026 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE00000000000000000020 /* OnboardingFlow.swift */,
+				C0DE00000000000000000022 /* OnboardingStepViews.swift */,
+				C0DE00000000000000000024 /* UIShowcase.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		C0DE0000000000000000002B /* Paywall */ = {
+			isa = PBXGroup;
+			children = (
+				C0DE00000000000000000027 /* PaywallView.swift */,
+				C0DE00000000000000000029 /* PaywallPresenter.swift */,
+			);
+			path = Paywall;
+			sourceTree = "<group>";
+		};
 		9BF8076C2A63AA7600FBDB8E /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				9BF807662A63AA6F00FBDB8E /* ColorExtension.swift */,
-				9BF807682A63AA6F00FBDB8E /* HelperMethods.swift */,
-				9BF807672A63AA6F00FBDB8E /* MontserratFontModifier.swift */,
-				9B38B8D52AC1FB2B0041AE64 /* CircularProgressView.swift */,
-				9B38B8D92AC210760041AE64 /* NursingTimer.swift */,
-				9B38B8DB2AC2112C0041AE64 /* TimerCapsuleView.swift */,
+				C0DE0000000000000000002C /* LiveSessionTimer.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -196,15 +260,12 @@
 		C953DD39287E0B3E00F1E1B7 /* Events */ = {
 			isa = PBXGroup;
 			children = (
-				C953DD3C287E0C0700F1E1B7 /* AddEventListView.swift */,
 				C969734A2881B0FA00156287 /* AddEventView.swift */,
 				C953DD40287F011B00F1E1B7 /* AddDiaperEventView.swift */,
 				C953DD42287F206400F1E1B7 /* AddNursingEventView.swift */,
 				C953DD44287F253800F1E1B7 /* AddSleepEventView.swift */,
-				C9D2C0822880D1DC00F85D8F /* EventView.swift */,
 				C969734C2881EF4400156287 /* AddVomitEventView.swift */,
 				C90F725F2888B0DE005FF2AB /* AddBottleFeedEventView.swift */,
-				9B38B8D72AC1FFB20041AE64 /* BreastPickerView.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -235,7 +296,6 @@
 			isa = PBXGroup;
 			children = (
 				C9B95D08287CA02400ADC43F /* View+Extensions.swift */,
-				C9B95D13287DAD9C00ADC43F /* ButtonStyles.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -243,6 +303,7 @@
 		C9B95D0B287DA6BF00ADC43F /* Journal */ = {
 			isa = PBXGroup;
 			children = (
+				C0DE0000000000000000002E /* TimelineRow.swift */,
 				C9B95D0C287DA6C800ADC43F /* JournalView.swift */,
 			);
 			path = Journal;
@@ -271,16 +332,20 @@
 		C9ED2EA0287C745100BA3228 /* Maby */ = {
 			isa = PBXGroup;
 			children = (
+				C0DE00000000000000000011 /* Design */,
+				C0DE0000000000000000001A /* Home */,
+				C0DE0000000000000000001F /* Insights */,
+				C0DE00000000000000000026 /* Onboarding */,
+				C0DE0000000000000000002B /* Paywall */,
+				C0DE00000000000000000030 /* BabyPlus.storekit */,
 				C91DF4B02884D6110014F602 /* Info.plist */,
 				9BF8076C2A63AA7600FBDB8E /* Helpers */,
 				C90F725628883B10005FF2AB /* Settings */,
 				C953DD39287E0B3E00F1E1B7 /* Events */,
 				C9B95D0B287DA6BF00ADC43F /* Journal */,
 				C9B95D07287CA01800ADC43F /* Common */,
-				C9B95D15287DF50D00ADC43F /* BabyCard.swift */,
 				C9ED2EA1287C745100BA3228 /* MabyApp.swift */,
 				C9ED2EA8287C745100BA3228 /* ContentView.swift */,
-				9BB2D44C2A4E9C7D002DA4CA /* ColorButton.swift */,
 				C9ED2EAA287C745300BA3228 /* Assets.xcassets */,
 				C9ED2EAC287C745300BA3228 /* BabyPlus.entitlements */,
 				C9ED2EAD287C745300BA3228 /* Preview Content */,
@@ -345,8 +410,6 @@
 			packageProductDependencies = (
 				C9ED2ED4287C98C000BA3228 /* MabyKit */,
 				C9ED2EDA287C995300BA3228 /* Factory */,
-				9BB2D44A2A4E397C002DA4CA /* AnimatedTabBar */,
-				9BB2D44F2A4EB1BB002DA4CA /* ScalingHeaderScrollView */,
 			);
 			productName = Maby;
 			productReference = C9ED2E9E287C745100BA3228 /* BabyPlus.app */;
@@ -381,8 +444,6 @@
 			mainGroup = C9ED2E95287C745100BA3228;
 			packageReferences = (
 				C9ED2ED9287C995300BA3228 /* XCRemoteSwiftPackageReference "Factory" */,
-				9BB2D4492A4E397C002DA4CA /* XCRemoteSwiftPackageReference "AnimatedTabBar" */,
-				9BB2D44E2A4EB1BB002DA4CA /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */,
 			);
 			productRefGroup = C9ED2E9F287C745100BA3228 /* Products */;
 			projectDirPath = "";
@@ -436,32 +497,41 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B38B8D62AC1FB2B0041AE64 /* CircularProgressView.swift in Sources */,
+				C0DE00000000000000000002 /* Theme.swift in Sources */,
+				C0DE00000000000000000004 /* LiquidGlass.swift in Sources */,
+				C0DE00000000000000000006 /* Motion.swift in Sources */,
+				C0DE00000000000000000008 /* Haptics.swift in Sources */,
+				C0DE0000000000000000000A /* AuroraBackground.swift in Sources */,
+				C0DE0000000000000000000C /* Components.swift in Sources */,
+				C0DE0000000000000000000E /* AppPreferences.swift in Sources */,
+				C0DE00000000000000000010 /* ToastCenter.swift in Sources */,
+				C0DE00000000000000000013 /* HomeView.swift in Sources */,
+				C0DE00000000000000000015 /* QuickLogTile.swift in Sources */,
+				C0DE00000000000000000017 /* BabyHeroCard.swift in Sources */,
+				C0DE00000000000000000019 /* LiveSessionCapsule.swift in Sources */,
+				C0DE0000000000000000001C /* InsightsView.swift in Sources */,
+				C0DE0000000000000000001E /* InsightCharts.swift in Sources */,
+				C0DE00000000000000000021 /* OnboardingFlow.swift in Sources */,
+				C0DE00000000000000000023 /* OnboardingStepViews.swift in Sources */,
+				C0DE00000000000000000025 /* UIShowcase.swift in Sources */,
+				C0DE00000000000000000028 /* PaywallView.swift in Sources */,
+				C0DE0000000000000000002A /* PaywallPresenter.swift in Sources */,
+				C0DE0000000000000000002D /* LiveSessionTimer.swift in Sources */,
+				C0DE0000000000000000002F /* TimelineRow.swift in Sources */,
 				C90F725828883B1B005FF2AB /* SettingsView.swift in Sources */,
 				C953DD43287F206400F1E1B7 /* AddNursingEventView.swift in Sources */,
 				C9B95D12287DA9D000ADC43F /* AddBabyView.swift in Sources */,
-				C9B95D16287DF50D00ADC43F /* BabyCard.swift in Sources */,
-				C9D2C0832880D1DC00F85D8F /* EventView.swift in Sources */,
 				C9ED2EA2287C745100BA3228 /* MabyApp.swift in Sources */,
 				C969734B2881B0FA00156287 /* AddEventView.swift in Sources */,
-				9BB2D44D2A4E9C7D002DA4CA /* ColorButton.swift in Sources */,
 				C90F725C28884379005FF2AB /* BabyDetailsFormView.swift in Sources */,
 				C953DD41287F011B00F1E1B7 /* AddDiaperEventView.swift in Sources */,
-				9B38B8DC2AC2112C0041AE64 /* TimerCapsuleView.swift in Sources */,
-				9BF8076B2A63AA6F00FBDB8E /* HelperMethods.swift in Sources */,
-				C953DD3D287E0C0700F1E1B7 /* AddEventListView.swift in Sources */,
 				C90F725E28884DD6005FF2AB /* RemoveBabyView.swift in Sources */,
-				9BF8076A2A63AA6F00FBDB8E /* MontserratFontModifier.swift in Sources */,
-				9BF807692A63AA6F00FBDB8E /* ColorExtension.swift in Sources */,
 				C90F725A2888432A005FF2AB /* EditBabyDetailsView.swift in Sources */,
 				C9B95D09287CA02400ADC43F /* View+Extensions.swift in Sources */,
-				9B38B8DA2AC210760041AE64 /* NursingTimer.swift in Sources */,
 				C90F72602888B0DE005FF2AB /* AddBottleFeedEventView.swift in Sources */,
 				C969734D2881EF4400156287 /* AddVomitEventView.swift in Sources */,
-				C9B95D14287DAD9C00ADC43F /* ButtonStyles.swift in Sources */,
 				C953DD45287F253800F1E1B7 /* AddSleepEventView.swift in Sources */,
 				C9B95D0D287DA6C800ADC43F /* JournalView.swift in Sources */,
-				9B38B8D82AC1FFB20041AE64 /* BreastPickerView.swift in Sources */,
 				C9ED2EA9287C745100BA3228 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -505,7 +575,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Debug;
 		};
@@ -538,7 +608,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Release;
 		};
@@ -672,7 +742,7 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -711,7 +781,7 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -762,22 +832,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		9BB2D4492A4E397C002DA4CA /* XCRemoteSwiftPackageReference "AnimatedTabBar" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/exyte/AnimatedTabBar.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.1;
-			};
-		};
-		9BB2D44E2A4EB1BB002DA4CA /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/exyte/ScalingHeaderScrollView";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.5;
-			};
-		};
 		C9ED2ED9287C995300BA3228 /* XCRemoteSwiftPackageReference "Factory" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hmlongco/Factory";
@@ -789,16 +843,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9BB2D44A2A4E397C002DA4CA /* AnimatedTabBar */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9BB2D4492A4E397C002DA4CA /* XCRemoteSwiftPackageReference "AnimatedTabBar" */;
-			productName = AnimatedTabBar;
-		};
-		9BB2D44F2A4EB1BB002DA4CA /* ScalingHeaderScrollView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9BB2D44E2A4EB1BB002DA4CA /* XCRemoteSwiftPackageReference "ScalingHeaderScrollView" */;
-			productName = ScalingHeaderScrollView;
-		};
 		C938D90E288454440041A3FA /* Factory */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9ED2ED9287C995300BA3228 /* XCRemoteSwiftPackageReference "Factory" */;

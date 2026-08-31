@@ -4,35 +4,37 @@ import SwiftUI
 
 struct AddBottleFeedEventView: View {
     @Injected(Container.eventService) private var eventService
-    
+
     @State private var date = Date.now
-    @State private var quantity = 100
-    
+    /// The last amount used becomes the default here and for touch-and-hold logging.
+    @AppStorage("babyplus.default.bottleMl") private var quantity = 120
+
     var body: some View {
         AddEventView(
-            "🍼 Bottle feed",
-            onAdd: {
-                eventService.addBottle(date: date, amount: quantity)
-            }
+            "Bottle feed",
+            style: .bottle,
+            onAdd: { eventService.addBottle(date: date, amount: quantity) }
         ) {
-            Section("Time") {
+            FieldCard(title: "Amount", systemImage: "drop.fill") {
+                AmountField(milliliters: $quantity, presets: [60, 90, 120, 150, 180])
+            }
+
+            FieldCard(title: "When", systemImage: "clock.fill") {
                 DatePicker(
-                    "Start",
+                    "Time",
                     selection: $date,
                     in: Date.distantPast...Date.now
                 )
-            }
-            
-            Section("Amount (mL)") {
-                TextField("Amount in milliliters", value: $quantity, format: .number)
-                    .keyboardType(.numberPad)
+                .labelsHidden()
+                .datePickerStyle(.compact)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }
 }
 
-struct AddBottleFeedEvent_Previews: PreviewProvider {
-    static var previews: some View {
-        AddBottleFeedEventView()
-    }
+#if DEBUG
+#Preview {
+    AddBottleFeedEventView()
 }
+#endif

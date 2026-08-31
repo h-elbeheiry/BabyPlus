@@ -34,9 +34,24 @@ extension Container {
     public static let eventService = Factory {
         EventService(database: database(), logger: logger())
     }
+
+    /// Aggregates the event log into the numbers the Insights screen draws.
+    public static let statisticsService = Factory {
+        StatisticsService(database: database())
+    }
+
+    /// Turns the event log into a spreadsheet.
+    public static let exportService = Factory {
+        ExportService(database: database())
+    }
+
+    /// Schedules the local notifications behind the reminders feature.
+    public static let reminderService = Factory(scope: .singleton) {
+        ReminderService()
+    }
     
     // MARK: - Utilities
     public static let logger = Factory {
-        Logger(label: "Maby")
+        Logger(label: "BabyPlus")
     }
 }

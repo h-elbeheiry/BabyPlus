@@ -4,38 +4,50 @@ import SwiftUI
 
 struct AddBabyView: View {
     @Injected(Container.babyService) private var babyService
-    
+    @Environment(\.dismiss) private var dismiss
+
     @State private var name = ""
     @State private var gender = Baby.Gender.boy
     @State private var birthday = Date.now
-    
-    private func onAdd() {
-        let _ = babyService.add(
-            name: name,
-            birthday: birthday,
-            gender: gender
-        )
+
+    /// Called after a successful save — onboarding uses it to advance.
+    private let onSaved: (() -> Void)?
+    /// Onboarding embeds this form as a page rather than presenting it, and needs
+    /// to stay on screen afterwards to make its one Pro offer.
+    private let dismissesOnSave: Bool
+
+    init(dismissesOnSave: Bool = true, onSaved: (() -> Void)? = nil) {
+        self.dismissesOnSave = dismissesOnSave
+        self.onSaved = onSaved
     }
-    
+
+    private func add() {
+        switch babyService.add(name: name, birthday: birthday, gender: gender) {
+        case .success:
+            Haptics.success()
+            onSaved?()
+            if dismissesOnSave { dismiss() }
+        case .failure:
+            Haptics.error()
+        }
+    }
+
     var body: some View {
         BabyDetailsFormView(
-            title: "Add a baby",
+            title: "Who are we tracking?",
+            subtitle: "Just a name and a birthday. Everything stays on your device and your private iCloud.",
             name: $name,
             gender: $gender,
             birthday: $birthday
         ) {
-            Button(action: onAdd) {
-                Text("Add baby")
-            }
+            BabyFormButton(title: "Start tracking", action: add)
         }
     }
 }
 
-struct AddBabyView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddBabyView()
-            .sheet(isPresented: Binding.constant(true)) {
-                AddBabyView()
-            }
-    }
+#if DEBUG
+#Preview {
+    AddBabyView()
+        .mockedDependencies(empty: true)
 }
+#endif

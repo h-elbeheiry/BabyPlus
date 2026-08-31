@@ -4,8 +4,10 @@ import Foundation
 /// Represents the types of events that we currently support. These are not used in the models, but are
 /// just an easy way to represent them in the UI and this package without instantiating an actual sub-class
 /// of the event.
-public enum EventType {
+public enum EventType: String, CaseIterable, Identifiable, Sendable {
     case bottle, diaper, nursing, sleep, vomit, nursingTimer
+
+    public var id: String { rawValue }
 }
 
 /// Represents an event with its start date. Do not use this entity directly, instead use one of the specific

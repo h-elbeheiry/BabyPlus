@@ -1,110 +1,80 @@
 import Factory
 import MabyKit
 import SwiftUI
-import Foundation
-import Combine
 
 struct AddNursingEventView: View {
     @Injected(Container.eventService) private var eventService
 
-    @State private var startDate = Date.now
     @State private var endDate = Date.now
-    @State private var breast = NursingEvent.Breast.left
+    @State private var startDate = Date.now.addingTimeInterval(-15 * 60)
+    @AppStorage("babyplus.default.breast") private var storedBreast = 0
+
+    private var breast: Binding<NursingEvent.Breast> {
+        Binding(
+            get: { NursingEvent.Breast(rawValue: Int32(storedBreast)) ?? .left },
+            set: { storedBreast = Int($0.rawValue) }
+        )
+    }
+
+    private var duration: TimeInterval { max(0, endDate.timeIntervalSince(startDate)) }
 
     var body: some View {
         AddEventView(
-            "🤱 Nursing",
+            "Nursing",
+            style: .nursing,
             onAdd: {
                 eventService.addNursing(
                     start: startDate,
                     end: endDate,
-                    breast: breast
+                    breast: breast.wrappedValue
                 )
             }
         ) {
-            Section("Time") {
-                DatePicker(
-                    "Start",
-                    selection: $startDate,
-                    in: Date.distantPast...Date.now
-                )
-
-                DatePicker(
-                    "End",
-                    selection: $endDate,
-                    in: startDate...Date.distantFuture
+            FieldCard(title: "Which side?", systemImage: "arrow.left.arrow.right") {
+                ChipPicker(
+                    options: [
+                        .init(value: .left, label: "Left"),
+                        .init(value: .right, label: "Right"),
+                        .init(value: .both, label: "Both")
+                    ],
+                    selection: breast,
+                    tint: EventStyle.nursing.tint
                 )
             }
 
-            Section("Breast") {
-                Picker("Breast", selection: $breast) {
-                    Text("Left").tag(NursingEvent.Breast.left)
-                    Text("Right").tag(NursingEvent.Breast.right)
-                    Text("Both").tag(NursingEvent.Breast.both)
-                }
-                .pickerStyle(.segmented)
-            }
-        }
-    }
-}
+            FieldCard(title: "How long?", systemImage: "hourglass") {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(duration.compactDuration)
+                        .font(.system(size: 34, weight: .bold, design: .rounded))
+                        .foregroundStyle(Palette.ink)
+                        .contentTransition(.numericText())
 
-struct AddNursingEvent_Previews: PreviewProvider {
-    static var previews: some View {
-        AddNursingEventView()
-    }
-}
-
-struct AddNursingTimerEventView: View {
-    @Injected(Container.eventService) private var eventService
-    @ObservedObject var nursingTimer: NursingTimer
-    @State private var breast = NursingEvent.Breast.left
-    @Binding var showingAddEvent: Bool
-
-    private let maxDuration = 3600  // Set this to the maximum expected nursing duration in seconds. 3600 is 1 hour.
-
-    var body: some View {
-        VStack(spacing: 16) {
-            if nursingTimer.state == .idle {
-
-                Section("Choose a breast") {
-                    Picker("Breast", selection: $nursingTimer.side) {
-                        Text("Left").tag(NursingEvent.Breast.left as NursingEvent.Breast?)
-                        Text("Right").tag(NursingEvent.Breast.right as NursingEvent.Breast?)
-                        Text("Both").tag(NursingEvent.Breast.both as NursingEvent.Breast?)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                }
-
-                Section {
-                    Button {
-                        if let side = nursingTimer.side {
-                            withAnimation {
-                                nursingTimer.start(side: side)
-                                showingAddEvent.toggle()
+                    DurationShortcuts(
+                        options: [5, 10, 15, 20, 30],
+                        apply: { minutes in
+                            withAnimation(Motion.snappy) {
+                                startDate = endDate.addingTimeInterval(-Double(minutes) * 60)
                             }
-                        }
-                    } label: {
-                        Text("Start")
-                    }
-                    .tint(Color.blue)
-                    .buttonStyle(.primaryAction)
+                        },
+                        tint: EventStyle.nursing.tint
+                    )
                 }
-                .clearBackground()
-                .disabled(!nursingTimer.canStart())
-                .opacity(nursingTimer.canStart() ? 1 : 0.5)
+            }
+
+            FieldCard(title: "Times", systemImage: "clock.fill") {
+                VStack(spacing: 10) {
+                    DatePicker("Started", selection: $startDate, in: Date.distantPast...Date.now)
+                    Divider()
+                    DatePicker("Finished", selection: $endDate, in: startDate...Date.distantFuture)
+                }
+                .font(.subheadline)
             }
         }
-        .padding()
     }
 }
 
-struct AddNursingTimerEventView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            AddNursingTimerEventView(
-                nursingTimer: NursingTimer(),
-                showingAddEvent: .constant(true)
-            )
-        }
-    }
+#if DEBUG
+#Preview {
+    AddNursingEventView()
 }
+#endif

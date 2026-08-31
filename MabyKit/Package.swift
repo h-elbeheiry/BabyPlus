@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
     name: "MabyKit",
     platforms: [
-        .iOS(.v15),
-        .watchOS(.v8)
+        .iOS(.v18),
+        .watchOS(.v11)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.

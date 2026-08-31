@@ -4,61 +4,48 @@ import SwiftUI
 
 struct EditBabyDetailsView: View {
     @Injected(Container.babyService) private var babyService
-    
+    @Environment(\.dismiss) private var dismiss
+
     @FetchRequest(fetchRequest: allBabies)
     private var babies: FetchedResults<Baby>
-    
-    @Environment(\.dismiss) private var dismiss
-    
+
     @State private var name = ""
     @State private var gender = Baby.Gender.boy
     @State private var birthday = Date.now
-    
-    private func onEdit() {
-        let result = babyService.edit(
-            baby: babies.first!,
-            name: name,
-            birthday: birthday,
-            gender: gender
-        )
-        
-        switch result {
-        case .success(_):
+
+    private func save() {
+        guard let baby = babies.first else { return }
+
+        switch babyService.edit(baby: baby, name: name, birthday: birthday, gender: gender) {
+        case .success:
+            Haptics.success()
             dismiss()
-            return
-        case .failure(_):
-            return
+        case .failure:
+            Haptics.error()
         }
     }
-    
+
     var body: some View {
         BabyDetailsFormView(
-            title: "Edit baby",
+            title: "Baby details",
             name: $name,
             gender: $gender,
             birthday: $birthday
         ) {
-            Button(action: onEdit) {
-                Text("Edit baby")
-            }
+            BabyFormButton(title: "Save changes", action: save)
         }
         .onAppear {
-            if babies.isEmpty {
-                return
-            }
-            
-            let baby = babies.first!
-            
-            self.name = baby.name
-            self.gender = baby.gender
-            self.birthday = baby.birthday
+            guard let baby = babies.first else { return }
+            name = baby.name
+            gender = baby.gender
+            birthday = baby.birthday
         }
     }
 }
 
-struct EditBabyDetailsView_Previews: PreviewProvider {
-    static var previews: some View {
-        EditBabyDetailsView()
-            .mockedDependencies()
-    }
+#if DEBUG
+#Preview {
+    EditBabyDetailsView()
+        .mockedDependencies()
 }
+#endif

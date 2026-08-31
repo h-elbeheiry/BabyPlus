@@ -1,44 +1,81 @@
-# 🐣 Maby
+# 🐣 BabyPlus
 
-Maby is an iOS/watchOS open-source app to help you keep track of your baby's sleep, feedings, diaper changes and more to avoid the constant questions like _"how many times did my baby pee today? Was it 5 or 6?"_
+BabyPlus is an iOS/watchOS app for keeping track of your baby's sleep, feedings, diaper changes and more — so nobody has to answer _"how many times did the baby pee today? Was it 5 or 6?"_ from memory.
+
+## ✨ What's in the app
+
+**Log in one touch.** The home screen is a grid of quick-log tiles. Tap one for the details sheet; touch and hold it and the entry is written immediately with your last-used values — with an Undo pill, so the shortcut is safe to try. Nursing and naps start a live timer instead, which keeps running while the phone is locked and is restored if the app is relaunched.
+
+**A journal you can read.** Every entry in plain language, on a timeline grouped by day.
+
+**Insights.** Swift Charts over feeding, sleep, diaper and bottle-volume data, with averages and a week-over-week trend.
+
+**Built on Liquid Glass.** Cards, bars, sheets and buttons use the system's `glassEffect` on iOS 26, grouped into `GlassEffectContainer`s so neighbouring surfaces morph rather than cross-fade. On earlier releases the same views fall back to materials, so layout and behaviour are identical and only the finish changes. Everything honours Dark Mode, Dynamic Type and Reduce Motion.
+
+**Onboarding that shows the real thing.** Five short pages, each pairing a sentence with a *live rendering of the actual control* it describes — the same `QuickLogTileContent`, `TimelineRowContent`, `BabyHeroCardContent`, `LiveSessionCapsule` and `FeedsChart` the app uses, fed with sample data. The quick-log page animates the touch-and-hold gesture on a loop so the shortcut is learned before it's needed. Nothing is a static screenshot, so the walkthrough can't go stale, and it renders in the user's own appearance and text size.
+
+## 💳 BabyPlus+ (subscription)
+
+A monthly or yearly auto-renewing subscription, implemented with StoreKit 2 in [`MabyKit/Sources/MabyKit/Subscription`](MabyKit/Sources/MabyKit/Subscription).
+
+| | Free | BabyPlus+ |
+|---|---|---|
+| Logging (all event types, timers, undo) | ✅ | ✅ |
+| iCloud sync + Apple Watch | ✅ | ✅ |
+| Journal history | Last 7 days | Everything |
+| Insights & trends | — | ✅ |
+| CSV export | — | ✅ |
+| Smart reminders | — | ✅ |
+| Themes & accents | — | ✅ |
+
+`SubscriptionService` treats StoreKit as the only source of truth: entitlement comes from `Transaction.currentEntitlements` on launch and on every foreground, and `Transaction.updates` keeps it correct while the app runs, so refunds, expiry, Family Sharing and purchases made on another device all work without extra code. Nothing about subscription state is cached anywhere it could go stale.
+
+Locked screens show your *own* data behind frosted glass rather than a blank wall (`PremiumGate`), and the paywall puts price, cadence and renewal terms on screen above the button.
+
+### Product identifiers
+
+| Product | Identifier |
+|---|---|
+| Monthly | `com.elbeheiry.babyplus.pro.monthly` |
+| Yearly | `com.elbeheiry.babyplus.pro.yearly` |
+
+Both live in the `babyplus_pro` subscription group.
+
+### Testing purchases locally
+
+[`BabyPlus.storekit`](BabyPlus.storekit) mirrors the App Store Connect setup and is already wired into the shared scheme, so purchases, trials and restores work in the simulator with no App Store Connect account. To exercise the Pro UI without going through a purchase at all, enable the `-BabyPlusForcePro YES` launch argument in the scheme (it is present but disabled, and is compiled out of release builds).
 
 ## ⚙️ Building
 
-The app was fully developed on Xcode 14 and includes a single-target watchOS app that as far as I know is not compatible with any lower version of Xcode, so you'll need the latest version of Xcode 14 to build it. Afterwards simply clone the repo and open!
+Requires **Xcode 26** (iOS 26 SDK) — the Liquid Glass APIs are behind `#available(iOS 26, *)` checks, but they still need the 26 SDK to compile. Deployment targets are iOS 18 and watchOS 11.
 
 ```bash
-git clone https://github.com/sleepyfran/maby/
+git clone https://github.com/h-elbeheiry/babyplus/
+open BabyPlus.xcodeproj
 ```
 
-And open the main project!
+### ❗️ CloudKit
 
-### ❗️ Important
+The app uses CloudKit to sync, so a **paid** developer account is needed. To build locally without it, remove the iCloud capability from the BabyPlus target and change `NSPersistentCloudKitContainer` to `NSPersistentContainer` in [`MabyKit/Sources/MabyKit/Persistence.swift`](MabyKit/Sources/MabyKit/Persistence.swift).
 
-The app uses CloudKit to sync all the data, so a **paid** developer account is needed. Alternatively if you want to build locally and you don't need CloudKit, you can simply remove the cloud capabilities by clicking in the top "Maby" project inside of Xcode and removing them as follows:
+> With CloudKit disabled the watchOS companion won't see the phone's data — it talks to the iOS database through CloudKit, so it will quietly create its own local store instead.
 
-<img src="./.github/img/no_cloudkit_instructions.png" width="400">
+## 🧱 Project layout
 
-And in the `Persistence.swift` file inside of `MabyKit`, change `NSPersistentCloudKitContainer` to `NSPersistentContainer`. The app will then hopefully build correctly 🙂
+```
+Maby/
+  Design/        Palette, Liquid Glass wrappers, motion tokens, haptics, shared components
+  Home/          Today screen, quick-log tiles, hero card, live session capsule
+  Journal/       Timeline
+  Insights/      Charts and the premium analytics tab
+  Onboarding/    Walkthrough + the live UI showcases
+  Paywall/       Paywall, presenter, premium gating
+  Events/        Add-event sheets
+  Settings/      Baby details, subscription, appearance, reminders, export
+MabyKit/         Core Data model, services, StoreKit, statistics, export, reminders
+```
 
-> Please note that if you disabled CloudKit the watchOS companion app will **not** work since it relies on CloudKit to communicate with the iOS database. If disabled, the watchOS app will basically create a new local database internally, completely independent from the iOS app, so you won't be able to see any of the events that you add through it.
-
-## 🏞 Show me!
-
-The app consist in a main iOS app that allows for adding events and visualizing them through a journal:
-
-<div float="left">
-	<img src="./.github/img/ios_add.png" width="300" />
-	<img src="./.github/img/ios_journal.png" width="300" />
-</div>
-</br>
-And a companion watchOS app that has the ability to add new entries to the main app:
-
-<div float="left">
-	<img src="./.github/img/watchos_add.png" width="300" />
-	<img src="./.github/img/watchos_add_detail.png" width="300" />
-</div>
-
-_(This one comes super in-handy during nights, trust me)_
+`Maby/Design/LiquidGlass.swift` is the single place that knows about `glassEffect`, `GlassEffectContainer`, `glassEffectID`, the glass button styles, `tabBarMinimizeBehavior`, `scrollEdgeEffectStyle` and `backgroundExtensionEffect`, each with an availability check and a material fallback. Nothing else in the app touches those APIs directly.
 
 ## ⬇️ Where can I get it?
 
@@ -46,4 +83,4 @@ _(This one comes super in-handy during nights, trust me)_
 
 ## 😀 Contributions/feedback
 
-Feel free to submit any ideas or feedback you have through the issues here on GitHub. Before you create a PR, please also create an issue so that we can discuss potential solutions and whether what you're about to implement is an actual feature that we want added to the app.
+Feel free to submit ideas or feedback through the issues here on GitHub. Before opening a PR, please open an issue first so we can discuss the approach and whether it's a feature we want.

@@ -4,34 +4,48 @@ import SwiftUI
 
 struct AddDiaperEventView: View {
     @Injected(Container.eventService) private var eventService
-    
+
     @State private var date = Date.now
-    @State private var diaperType = DiaperEvent.DiaperType.wet
-    
+    @AppStorage("babyplus.default.diaperType") private var storedType = 0
+
+    private var diaperType: Binding<DiaperEvent.DiaperType> {
+        Binding(
+            get: { DiaperEvent.DiaperType(rawValue: Int32(storedType)) ?? .wet },
+            set: { storedType = Int($0.rawValue) }
+        )
+    }
+
     var body: some View {
         AddEventView(
-            "🧷 Diaper change",
-            onAdd: {
-                eventService.addDiaperChange(date: date, type: diaperType)
-            }
+            "Diaper change",
+            style: .diaper,
+            onAdd: { eventService.addDiaperChange(date: date, type: diaperType.wrappedValue) }
         ) {
-            Section() {
-                DatePicker("Date", selection: $date)
-                
-                Picker("Diaper type", selection: $diaperType) {
-                    Text("Wet").tag(DiaperEvent.DiaperType.wet)
-                    Text("Dirty").tag(DiaperEvent.DiaperType.dirty)
-                    Text("Mixed").tag(DiaperEvent.DiaperType.mixed)
-                    Text("Clean").tag(DiaperEvent.DiaperType.clean)
-                }
-                .pickerStyle(.segmented)
+            FieldCard(title: "What did you find?", systemImage: "eye.fill") {
+                ChipPicker(
+                    options: [
+                        .init(value: .wet, label: "Wet"),
+                        .init(value: .dirty, label: "Dirty"),
+                        .init(value: .mixed, label: "Mixed"),
+                        .init(value: .clean, label: "Clean")
+                    ],
+                    selection: diaperType,
+                    tint: EventStyle.diaper.tint
+                )
+            }
+
+            FieldCard(title: "When", systemImage: "clock.fill") {
+                DatePicker("Time", selection: $date, in: Date.distantPast...Date.now)
+                    .labelsHidden()
+                    .datePickerStyle(.compact)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }
 }
 
-struct AddDiaperEvent_Previews: PreviewProvider {
-    static var previews: some View {
-        AddDiaperEventView()
-    }
+#if DEBUG
+#Preview {
+    AddDiaperEventView()
 }
+#endif
