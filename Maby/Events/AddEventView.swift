@@ -9,8 +9,9 @@ import SwiftUI
 /// position your thumb can find, and always opens prefilled with "now" so the
 /// common case is one tap.
 struct AddEventView<Content: View, E: Event>: View {
-    private enum ActionState {
-        case resting, saving, saved, failed
+    private enum ActionState: Equatable {
+        case resting, saving, saved
+        case failed(AddError)
     }
 
     @Environment(\.dismiss) private var dismiss
@@ -89,9 +90,9 @@ struct AddEventView<Content: View, E: Event>: View {
                 case .saved:
                     Image(systemName: "checkmark.circle.fill")
                     Text("Saved").fontWeight(.semibold)
-                case .failed:
+                case .failed(let error):
                     Image(systemName: "exclamationmark.triangle.fill")
-                    Text("Check the times and try again").fontWeight(.semibold)
+                    Text(message(for: error)).fontWeight(.semibold)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -113,6 +114,16 @@ struct AddEventView<Content: View, E: Event>: View {
         }
     }
 
+    /// Say what actually went wrong. "Try again" on a missing baby would send
+    /// someone round the same loop forever.
+    private func message(for error: AddError) -> String {
+        switch error {
+        case .invalidData: return "Check the times and try again"
+        case .noBaby: return "Pick a baby first"
+        case .databaseError: return "Couldn't save — try again"
+        }
+    }
+
     private func save() {
         guard state == .resting else { return }
         state = .saving
@@ -122,8 +133,8 @@ struct AddEventView<Content: View, E: Event>: View {
             state = .saved
             Haptics.success()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) { dismiss() }
-        case .failure:
-            state = .failed
+        case .failure(let error):
+            state = .failed(error)
             Haptics.error()
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { state = .resting }
         }

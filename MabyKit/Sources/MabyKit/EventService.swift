@@ -5,87 +5,120 @@ import Foundation
 public class EventService {
     let database: PersistenceController
     let logger: Logger
-    
+
     init(database: PersistenceController, logger: Logger) {
         self.database = database
         self.logger = logger
     }
-    
-    private func save<E: Event>(event: E) -> Result<E, AddError> {
+
+    private var context: NSManagedObjectContext { database.container.viewContext }
+
+    /// Attaches the event to a baby and saves.
+    ///
+    /// An event with no baby is invisible everywhere in the app, so rather than
+    /// writing one we refuse: a caller that can't say who the entry is for has a
+    /// bug, and a rejected save is much easier to notice than a row that silently
+    /// never appears.
+    private func save<E: Event>(event: E, baby: Baby?) -> Result<E, AddError> {
+        guard let owner = baby ?? soleBaby() else {
+            context.delete(event)
+            logger.error("Refused to save an event that isn't attached to a baby")
+            return .failure(.noBaby)
+        }
+
+        event.baby = owner
+
         do {
-            try database.container.viewContext.save()
+            try context.save()
             return .success(event)
         } catch(let error) {
             logger.error("Attempted to save database with new event, but failed with reason: \(error)")
             return .failure(.databaseError)
         }
     }
-    
-    /// Removes the given event from the database.
+
+    /// The only baby on file, if there is exactly one. Lets callers that predate
+    /// multiple profiles — the watch app's simplest path, mainly — keep working
+    /// without having to pass one explicitly.
+    private func soleBaby() -> Baby? {
+        let request = Baby.fetchRequest() as! NSFetchRequest<Baby>
+        request.fetchLimit = 2
+        let babies = (try? context.fetch(request)) ?? []
+        return babies.count == 1 ? babies.first : nil
+    }
+
+    /// Removes the given events from the database.
     public func delete(events: [Event]) {
-        events.forEach { event in
-            database.container.viewContext.delete(event)
-        }
-        
+        events.forEach { context.delete($0) }
+
         do {
-            try database.container.viewContext.save()
+            try context.save()
         } catch(let error) {
             logger.error("Attempted to remove event, but failed with reason \(error)")
         }
     }
-    
-    /// Removes **ALL** events from the database.
-    public func deleteAll() {
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Event")
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+    /// Removes every event belonging to one baby.
+    ///
+    /// Deleting the baby itself cascades to its events, so this exists for the
+    /// "start this log over" case rather than for deletion.
+    public func deleteAll(for baby: Baby) {
+        let request = NSFetchRequest<Event>(entityName: "Event")
+        request.predicate = eventsBelongTo(baby)
 
         do {
-            try database.container.viewContext.execute(deleteRequest)
+            let events = try context.fetch(request)
+            events.forEach { context.delete($0) }
+            try context.save()
         } catch (let error) {
-            logger.error("Attempted to remove ALL events, but failed with reason: \(error)")
+            logger.error("Attempted to remove all events for a baby, but failed with reason: \(error)")
         }
     }
-    
+
     /// Adds a new feeding from a bottle.
     public func addBottle(
+        for baby: Baby? = nil,
         date: Date,
         amount: Int
     ) -> Result<BottleFeedEvent, AddError> {
         let event = BottleFeedEvent(
-            context: database.container.viewContext,
+            context: context,
             date: date,
             quantity: Int32(amount)
         )
-        
-        return save(event: event)
+
+        return save(event: event, baby: baby)
     }
-    
-    public func addBottle(amount: Int) -> Result<BottleFeedEvent, AddError> {
-        return addBottle(date: Date.now, amount: amount)
+
+    public func addBottle(for baby: Baby? = nil, amount: Int) -> Result<BottleFeedEvent, AddError> {
+        addBottle(for: baby, date: Date.now, amount: amount)
     }
-    
+
     /// Adds a new diaper change event to the database.
     public func addDiaperChange(
+        for baby: Baby? = nil,
         date: Date,
         type: DiaperEvent.DiaperType
     ) -> Result<DiaperEvent, AddError> {
         let event = DiaperEvent(
-            context: database.container.viewContext,
+            context: context,
             date: date,
             type: type
         )
-        
-        return save(event: event)
+
+        return save(event: event, baby: baby)
     }
-    
+
     public func addDiaperChange(
+        for baby: Baby? = nil,
         type: DiaperEvent.DiaperType
     ) -> Result<DiaperEvent, AddError> {
-        return addDiaperChange(date: Date.now, type: type)
+        addDiaperChange(for: baby, date: Date.now, type: type)
     }
-    
+
     /// Adds a new nursing event to the database if the provided dates are valid.
     public func addNursing(
+        for baby: Baby? = nil,
         start: Date,
         end: Date,
         breast: NursingEvent.Breast
@@ -93,18 +126,19 @@ public class EventService {
         if start > end {
             return .failure(.invalidData)
         }
-        
+
         let event = NursingEvent(
-            context: database.container.viewContext,
+            context: context,
             start: start,
             end: end,
             breast: breast
         )
-        
-        return save(event: event)
+
+        return save(event: event, baby: baby)
     }
-    
+
     public func addNursing(
+        for baby: Baby? = nil,
         duration: Double,
         breast: NursingEvent.Breast
     ) -> Result<NursingEvent, AddError> {
@@ -114,56 +148,59 @@ public class EventService {
             value: Int(duration.rounded(.up)) * -1,
             to: end
         )!
-        
-        return addNursing(start: start, end: end, breast: breast)
+
+        return addNursing(for: baby, start: start, end: end, breast: breast)
     }
-    
+
     /// Adds a new sleep event to the database if the provided dates are valid.
     public func addSleep(
+        for baby: Baby? = nil,
         start: Date,
         end: Date
     ) -> Result<SleepEvent, AddError> {
         if start > end {
             return .failure(.invalidData)
         }
-        
+
         let event = SleepEvent(
-            context: database.container.viewContext,
+            context: context,
             start: start,
             end: end
         )
-        
-        return save(event: event)
+
+        return save(event: event, baby: baby)
     }
-    
-    public func addSleep(duration: Double) -> Result<SleepEvent, AddError> {
+
+    public func addSleep(for baby: Baby? = nil, duration: Double) -> Result<SleepEvent, AddError> {
         let end = Date.now
         let start = Calendar.current.date(
             byAdding: .hour,
             value: Int(duration.rounded(.up)) * -1,
             to: end
         )!
-        
-        return addSleep(start: start, end: end)
+
+        return addSleep(for: baby, start: start, end: end)
     }
-    
-    /// Adds a new diaper change event to the database.
+
+    /// Adds a new spit-up event to the database.
     public func addVomit(
+        for baby: Baby? = nil,
         date: Date,
         quantity: VomitEvent.Quantity
     ) -> Result<VomitEvent, AddError> {
         let event = VomitEvent(
-            context: database.container.viewContext,
+            context: context,
             date: date,
             quantity: quantity
         )
-        
-        return save(event: event)
+
+        return save(event: event, baby: baby)
     }
-    
+
     public func addVomit(
+        for baby: Baby? = nil,
         quantity: VomitEvent.Quantity
     ) -> Result<VomitEvent, AddError> {
-        return addVomit(date: Date.now, quantity: quantity)
+        addVomit(for: baby, date: Date.now, quantity: quantity)
     }
 }

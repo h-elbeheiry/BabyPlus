@@ -4,12 +4,15 @@ import SwiftUI
 
 struct AddDiaperEventView: View {
     @Injected(Container.eventService) private var eventService
+
+    /// Whose log this entry belongs to.
+    let baby: Baby?
     
     @State private var diaperType: DiaperEvent.DiaperType = .wet
     
     var body: some View {
         AddEventView(action: {
-            eventService.addDiaperChange(type: diaperType)
+            eventService.addDiaperChange(for: baby, type: diaperType)
         }) {
             Picker("Diaper type", selection: $diaperType) {
                 Text("Wet").tag(DiaperEvent.DiaperType.wet)
@@ -25,6 +28,6 @@ struct AddDiaperEventView: View {
 
 struct AddDiaperEventView_Previews: PreviewProvider {
     static var previews: some View {
-        AddDiaperEventView()
+        AddDiaperEventView(baby: nil)
     }
 }

@@ -8,6 +8,8 @@ BabyPlus is an iOS/watchOS app for keeping track of your baby's sleep, feedings,
 
 **A journal you can read.** Every entry in plain language, on a timeline grouped by day.
 
+**A profile per child.** Every event belongs to exactly one baby, so twins — or a nanny's charges — keep entirely separate logs. Switching is a tap on the hero card, and the choice is remembered by a stable `UUID` rather than an `NSManagedObjectID`, so it survives iCloud sync to another device. The watch asks which baby it is logging for when there is more than one, instead of guessing.
+
 **Insights.** Swift Charts over feeding, sleep, diaper and bottle-volume data, with averages and a week-over-week trend.
 
 **Built on Liquid Glass.** Cards, bars, sheets and buttons use the system's `glassEffect` on iOS 26, grouped into `GlassEffectContainer`s so neighbouring surfaces morph rather than cross-fade. On earlier releases the same views fall back to materials, so layout and behaviour are identical and only the finish changes. Everything honours Dark Mode, Dynamic Type and Reduce Motion.
@@ -22,6 +24,7 @@ A monthly or yearly auto-renewing subscription, implemented with StoreKit 2 in [
 |---|---|---|
 | Logging (all event types, timers, undo) | ✅ | ✅ |
 | iCloud sync + Apple Watch | ✅ | ✅ |
+| Baby profiles | 1 | Unlimited |
 | Journal history | Last 7 days | Everything |
 | Insights & trends | — | ✅ |
 | CSV export | — | ✅ |

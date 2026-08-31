@@ -68,10 +68,10 @@ final class LiveSessionTimer: ObservableObject {
         Haptics.tap(.medium)
     }
 
-    /// Stops the stopwatch and writes the event. Returns the saved event so the
-    /// caller can offer an undo.
+    /// Stops the stopwatch and writes the event against `baby`. Returns the saved
+    /// event so the caller can offer an undo.
     @discardableResult
-    func stopAndSave() -> Event? {
+    func stopAndSave(for baby: Baby?) -> Event? {
         guard let session, let startedAt else { return nil }
         stopTicking()
 
@@ -81,11 +81,11 @@ final class LiveSessionTimer: ObservableObject {
         switch session {
         case .nursing(let breast):
             saved = try? eventService
-                .addNursing(start: startedAt, end: end, breast: breast)
+                .addNursing(for: baby, start: startedAt, end: end, breast: breast)
                 .get()
         case .sleep:
             saved = try? eventService
-                .addSleep(start: startedAt, end: end)
+                .addSleep(for: baby, start: startedAt, end: end)
                 .get()
         }
 

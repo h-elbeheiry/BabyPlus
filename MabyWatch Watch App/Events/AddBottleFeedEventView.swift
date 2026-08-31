@@ -4,6 +4,9 @@ import SwiftUI
 
 struct AddBottleFeedEventView: View {
     @Injected(Container.eventService) private var eventService
+
+    /// Whose log this entry belongs to.
+    let baby: Baby?
     @Environment(\.dismiss) private var dismiss
     
     @State private var amount = 100.0
@@ -19,7 +22,7 @@ struct AddBottleFeedEventView: View {
     
     var body: some View {
         AddEventView(action: {
-            eventService.addBottle(amount: Int(amount.rounded(.up)))
+            eventService.addBottle(for: baby, amount: Int(amount.rounded(.up)))
         }) {
             Section("Amount") {
                 VStack(alignment: .leading) {
@@ -39,7 +42,7 @@ struct AddBottleFeedEventView: View {
 struct AddBottleFeedEventView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AddBottleFeedEventView()
+            AddBottleFeedEventView(baby: nil)
         }
     }
 }

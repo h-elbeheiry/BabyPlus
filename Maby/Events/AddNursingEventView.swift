@@ -5,6 +5,9 @@ import SwiftUI
 struct AddNursingEventView: View {
     @Injected(Container.eventService) private var eventService
 
+    /// Whose log this entry belongs to.
+    let baby: Baby?
+
     @State private var endDate = Date.now
     @State private var startDate = Date.now.addingTimeInterval(-15 * 60)
     @AppStorage("babyplus.default.breast") private var storedBreast = 0
@@ -24,6 +27,7 @@ struct AddNursingEventView: View {
             style: .nursing,
             onAdd: {
                 eventService.addNursing(
+                    for: baby,
                     start: startDate,
                     end: endDate,
                     breast: breast.wrappedValue
@@ -75,6 +79,6 @@ struct AddNursingEventView: View {
 
 #if DEBUG
 #Preview {
-    AddNursingEventView()
+    AddNursingEventView(baby: nil)
 }
 #endif

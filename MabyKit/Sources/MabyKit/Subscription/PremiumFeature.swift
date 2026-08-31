@@ -3,6 +3,7 @@ import Foundation
 /// Everything BabyPlus+ unlocks. Keeping the list in one enum means the paywall,
 /// the settings screen and every gate in the UI can never drift apart.
 public enum PremiumFeature: String, CaseIterable, Identifiable, Sendable {
+    case multipleBabies
     case insights
     case fullHistory
     case dataExport
@@ -13,6 +14,7 @@ public enum PremiumFeature: String, CaseIterable, Identifiable, Sendable {
 
     public var title: String {
         switch self {
+        case .multipleBabies: return "Unlimited baby profiles"
         case .insights: return "Insights & trends"
         case .fullHistory: return "Your complete history"
         case .dataExport: return "Export your data"
@@ -23,6 +25,8 @@ public enum PremiumFeature: String, CaseIterable, Identifiable, Sendable {
 
     public var subtitle: String {
         switch self {
+        case .multipleBabies:
+            return "Twins, siblings, or the children you look after — each with their own log, one tap apart."
         case .insights:
             return "Charts for feeding, sleep and diapers, so you can spot a pattern before anyone thinks to ask about one."
         case .fullHistory:
@@ -39,6 +43,7 @@ public enum PremiumFeature: String, CaseIterable, Identifiable, Sendable {
     /// The one-line promise used on compact surfaces like the paywall hero.
     public var tagline: String {
         switch self {
+        case .multipleBabies: return "One log each"
         case .insights: return "See the patterns"
         case .fullHistory: return "Keep everything"
         case .dataExport: return "Take it with you"
@@ -49,6 +54,7 @@ public enum PremiumFeature: String, CaseIterable, Identifiable, Sendable {
 
     public var systemImage: String {
         switch self {
+        case .multipleBabies: return "person.2.fill"
         case .insights: return "chart.xyaxis.line"
         case .fullHistory: return "clock.arrow.circlepath"
         case .dataExport: return "square.and.arrow.up.fill"
@@ -62,6 +68,9 @@ public enum PremiumFeature: String, CaseIterable, Identifiable, Sendable {
 /// so the free tier is a deliberate product decision rather than an accident of
 /// wherever a check happened to be added.
 public enum FreeTier {
+    /// How many baby profiles a free account can keep.
+    public static let babyProfileLimit = 1
+
     /// How far back the journal reaches without a subscription.
     public static let journalHistoryDays = 7
 

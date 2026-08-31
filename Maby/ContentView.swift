@@ -17,6 +17,7 @@ struct ContentView: View {
     @EnvironmentObject private var paywall: PaywallPresenter
     @EnvironmentObject private var preferences: AppPreferences
     @EnvironmentObject private var toast: ToastCenter
+    @EnvironmentObject private var activeBaby: ActiveBaby
 
     @StateObject private var timer = LiveSessionTimer()
 
@@ -34,23 +35,29 @@ struct ContentView: View {
         preferences.effectiveAccent(isSubscribed: subscriptions.isSubscribed)
     }
 
+    /// Resolved once here and handed down, so every tab is guaranteed to be
+    /// looking at the same baby within a single render.
+    private var baby: Baby? {
+        activeBaby.resolve(in: babies)
+    }
+
     var body: some View {
         TabView(selection: $selection) {
             Tab("Today", systemImage: "house.fill", value: AppTab.today) {
                 tabScaffold(title: "Today", seed: 0) {
-                    HomeView(timer: timer)
+                    HomeView(timer: timer, baby: baby)
                 }
             }
 
             Tab("Journal", systemImage: "list.bullet.rectangle.portrait.fill", value: AppTab.journal) {
                 tabScaffold(title: "Journal", seed: 1.6) {
-                    JournalView()
+                    JournalView(baby: baby)
                 }
             }
 
             Tab("Insights", systemImage: "chart.xyaxis.line", value: AppTab.insights) {
                 tabScaffold(title: "Insights", seed: 3.1) {
-                    InsightsView()
+                    InsightsView(baby: baby)
                 }
             }
 
@@ -73,7 +80,7 @@ struct ContentView: View {
             OnboardingFlow()
         }
         .sheet(isPresented: $showingAddBaby) {
-            AddBabyView()
+            AddBabyView { added in activeBaby.select(added) }
                 .interactiveDismissDisabled(true)
                 .presentationBackground(.regularMaterial)
                 .presentationCornerRadius(32)
@@ -145,6 +152,7 @@ struct ContentView_Previews: PreviewProvider {
             .environmentObject(PaywallPresenter())
             .environmentObject(AppPreferences())
             .environmentObject(ToastCenter())
+            .environmentObject(ActiveBaby())
             .previewDisplayName("With data")
 
         ContentView()
@@ -153,6 +161,7 @@ struct ContentView_Previews: PreviewProvider {
             .environmentObject(PaywallPresenter())
             .environmentObject(AppPreferences())
             .environmentObject(ToastCenter())
+            .environmentObject(ActiveBaby())
             .previewDisplayName("Fresh install")
     }
 }

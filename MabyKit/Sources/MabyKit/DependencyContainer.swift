@@ -24,11 +24,7 @@ extension Container {
     
     // MARK: - Services
     public static let babyService = Factory {
-        BabyService(
-            database: database(),
-            eventService: eventService(),
-            logger: logger()
-        )
+        BabyService(database: database(), logger: logger())
     }
     
     public static let eventService = Factory {

@@ -8,16 +8,10 @@ public func isValidBaby(name: String, birthday: Date) -> Bool {
 
 public class BabyService {
     let database: PersistenceController
-    let eventService: EventService
     let logger: Logger
-    
-    init(
-        database: PersistenceController,
-        eventService: EventService,
-        logger: Logger
-    ) {
+
+    init(database: PersistenceController, logger: Logger) {
         self.database = database
-        self.eventService = eventService
         self.logger = logger
     }
     
@@ -71,12 +65,14 @@ public class BabyService {
         }
     }
     
-    /// Removes the given baby from the database.
+    /// Removes the given baby, and with it everything ever logged for them.
+    ///
+    /// The events go via the model's cascade rule rather than a blanket delete —
+    /// the old implementation wiped *every* event in the store, which quietly took
+    /// a sibling's whole history with it.
     public func remove(baby: Baby) {
         database.container.viewContext.delete(baby)
-        
-        eventService.deleteAll()
-        
+
         do {
             try database.container.viewContext.save()
         } catch (let error) {

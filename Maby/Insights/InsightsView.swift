@@ -11,11 +11,11 @@ struct InsightsView: View {
     @Injected(Container.statisticsService) private var statistics
     @Injected(Container.exportService) private var exporter
 
+    /// Whose numbers are on screen.
+    let baby: Baby?
+
     @EnvironmentObject private var subscriptions: SubscriptionService
     @EnvironmentObject private var paywall: PaywallPresenter
-
-    @FetchRequest(fetchRequest: allBabies)
-    private var babies: FetchedResults<Baby>
 
     @State private var window: Window = .week
     @State private var days: [DailyStat] = []
@@ -93,6 +93,7 @@ struct InsightsView: View {
         .softScrollEdges()
         .onAppear(perform: reload)
         .onChange(of: window) { _, _ in reload() }
+        .onChange(of: baby?.id) { _, _ in reload() }
         .onReceive(databaseUpdates) { _ in reload() }
         .sheet(item: Binding(
             get: { exportURL.map { ShareItem(url: $0) } },
@@ -180,12 +181,13 @@ struct InsightsView: View {
     // MARK: - Actions
 
     private func reload() {
-        days = statistics.dailyStats(forLast: window.rawValue)
+        days = statistics.dailyStats(for: baby, forLast: window.rawValue)
     }
 
     private func export() {
+        guard let baby else { return }
         do {
-            exportURL = try exporter.writeCSV(babyName: babies.first?.name)
+            exportURL = try exporter.writeCSV(for: baby)
             Haptics.success()
         } catch {
             exportFailed = true
@@ -241,7 +243,7 @@ private struct ShareSheet: UIViewControllerRepresentable {
 #Preview {
     ZStack {
         AuroraBackground()
-        InsightsView()
+        InsightsView(baby: nil)
             .mockedDependencies()
             .environmentObject(SubscriptionService())
             .environmentObject(PaywallPresenter())

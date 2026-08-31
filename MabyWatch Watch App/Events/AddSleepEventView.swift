@@ -4,6 +4,9 @@ import SwiftUI
 
 struct AddSleepEventView: View {
     @Injected(Container.eventService) private var eventService
+
+    /// Whose log this entry belongs to.
+    let baby: Baby?
     
     @State private var duration = 3.0
     
@@ -13,7 +16,7 @@ struct AddSleepEventView: View {
     
     var body: some View {
         AddEventView(action: {
-            eventService.addSleep(duration: duration)
+            eventService.addSleep(for: baby, duration: duration)
         }) {
             Section("Duration") {
                 VStack(alignment: .leading) {
@@ -32,6 +35,6 @@ struct AddSleepEventView: View {
 
 struct AddSleepEventView_Previews: PreviewProvider {
     static var previews: some View {
-        AddSleepEventView()
+        AddSleepEventView(baby: nil)
     }
 }

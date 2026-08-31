@@ -10,22 +10,23 @@ struct AddBabyView: View {
     @State private var gender = Baby.Gender.boy
     @State private var birthday = Date.now
 
-    /// Called after a successful save — onboarding uses it to advance.
-    private let onSaved: (() -> Void)?
+    /// Called with the new baby after a successful save — onboarding uses it to
+    /// advance, and the app uses it to switch to whoever was just added.
+    private let onSaved: ((Baby) -> Void)?
     /// Onboarding embeds this form as a page rather than presenting it, and needs
     /// to stay on screen afterwards to make its one Pro offer.
     private let dismissesOnSave: Bool
 
-    init(dismissesOnSave: Bool = true, onSaved: (() -> Void)? = nil) {
+    init(dismissesOnSave: Bool = true, onSaved: ((Baby) -> Void)? = nil) {
         self.dismissesOnSave = dismissesOnSave
         self.onSaved = onSaved
     }
 
     private func add() {
         switch babyService.add(name: name, birthday: birthday, gender: gender) {
-        case .success:
+        case .success(let baby):
             Haptics.success()
-            onSaved?()
+            onSaved?(baby)
             if dismissesOnSave { dismiss() }
         case .failure:
             Haptics.error()

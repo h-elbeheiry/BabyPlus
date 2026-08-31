@@ -5,6 +5,9 @@ import SwiftUI
 struct AddSleepEventView: View {
     @Injected(Container.eventService) private var eventService
 
+    /// Whose log this entry belongs to.
+    let baby: Baby?
+
     @State private var endDate = Date.now
     @State private var startDate = Date.now.addingTimeInterval(-45 * 60)
 
@@ -14,7 +17,7 @@ struct AddSleepEventView: View {
         AddEventView(
             "Sleep",
             style: .sleep,
-            onAdd: { eventService.addSleep(start: startDate, end: endDate) }
+            onAdd: { eventService.addSleep(for: baby, start: startDate, end: endDate) }
         ) {
             FieldCard(title: "How long?", systemImage: "hourglass") {
                 VStack(alignment: .leading, spacing: 12) {
@@ -49,6 +52,6 @@ struct AddSleepEventView: View {
 
 #if DEBUG
 #Preview {
-    AddSleepEventView()
+    AddSleepEventView(baby: nil)
 }
 #endif

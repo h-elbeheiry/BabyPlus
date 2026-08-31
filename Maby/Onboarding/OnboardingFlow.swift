@@ -11,6 +11,7 @@ import SwiftUI
 struct OnboardingFlow: View {
     @EnvironmentObject private var preferences: AppPreferences
     @EnvironmentObject private var subscriptions: SubscriptionService
+    @EnvironmentObject private var activeBaby: ActiveBaby
     @Environment(\.dismiss) private var dismiss
 
     @State private var page = 0
@@ -100,7 +101,10 @@ struct OnboardingFlow: View {
     // MARK: - Final page
 
     private var babyForm: some View {
-        AddBabyView(dismissesOnSave: false, onSaved: offerProThenFinish)
+        AddBabyView(dismissesOnSave: false) { baby in
+            activeBaby.select(baby)
+            offerProThenFinish()
+        }
     }
 
     /// Once there's a baby to track, offer the subscription exactly once. Anyone
@@ -163,7 +167,7 @@ struct OnboardingStep: Identifiable {
             id: "insights",
             eyebrow: "Insights",
             title: "Turn the log into an answer",
-            body: "BabyPlus+ charts feeding, sleep and diapers over time, keeps your full history, and exports the lot as a spreadsheet.",
+            body: "BabyPlus+ charts feeding, sleep and diapers over time, keeps your full history, adds a profile per child, and exports the lot as a spreadsheet.",
             showcase: AnyView(InsightsShowcase())
         )
     ]
@@ -248,5 +252,6 @@ private struct PageDots: View {
         .environmentObject(SubscriptionService())
         .environmentObject(PaywallPresenter())
         .environmentObject(ToastCenter())
+        .environmentObject(ActiveBaby())
 }
 #endif

@@ -114,16 +114,20 @@ public final class StatisticsService {
         self.calendar = calendar
     }
 
-    /// Aggregates the last `days` calendar days, oldest first, including days with
-    /// no activity so charts keep an even x-axis.
-    public func dailyStats(forLast days: Int, endingOn reference: Date = .now) -> [DailyStat] {
+    /// Aggregates one baby's last `days` calendar days, oldest first, including
+    /// days with no activity so charts keep an even x-axis.
+    public func dailyStats(
+        for baby: Baby?,
+        forLast days: Int,
+        endingOn reference: Date = .now
+    ) -> [DailyStat] {
         let today = calendar.startOfDay(for: reference)
         guard
             let windowStart = calendar.date(byAdding: .day, value: -(days - 1), to: today),
             let windowEnd = calendar.date(byAdding: .day, value: 1, to: today)
         else { return [] }
 
-        let events = fetchEvents(from: windowStart, to: windowEnd)
+        let events = fetchEvents(for: baby, from: windowStart, to: windowEnd)
 
         var buckets: [Date: Accumulator] = [:]
         for offset in 0..<days {
@@ -143,49 +147,41 @@ public final class StatisticsService {
             .map { $0.value.stat(for: $0.key) }
     }
 
-    public func summary(forLast days: Int, endingOn reference: Date = .now) -> StatsSummary {
-        StatsSummary(days: dailyStats(forLast: days, endingOn: reference))
+    public func summary(
+        for baby: Baby?,
+        forLast days: Int,
+        endingOn reference: Date = .now
+    ) -> StatsSummary {
+        StatsSummary(days: dailyStats(for: baby, forLast: days, endingOn: reference))
     }
 
     /// Today's numbers, for the home screen's glance row.
-    public func today(reference: Date = .now) -> DailyStat {
-        dailyStats(forLast: 1, endingOn: reference).first ?? .empty(day: calendar.startOfDay(for: reference))
-    }
-
-    /// The most recent event of each type, so the quick-log tiles can say "3h ago".
-    public func lastEventDates() -> [String: Date] {
-        let events = fetchEvents(from: .distantPast, to: .distantFuture, limit: 400)
-        var result: [String: Date] = [:]
-        for event in events.sorted(by: { $0.start > $1.start }) {
-            let key = String(describing: type(of: event))
-            if result[key] == nil { result[key] = endDate(of: event) }
-        }
-        return result
+    public func today(for baby: Baby?, reference: Date = .now) -> DailyStat {
+        dailyStats(for: baby, forLast: 1, endingOn: reference).first
+            ?? .empty(day: calendar.startOfDay(for: reference))
     }
 
     // MARK: - Fetching
 
-    private func fetchEvents(from start: Date, to end: Date, limit: Int? = nil) -> [Event] {
+    private func fetchEvents(for baby: Baby?, from start: Date, to end: Date) -> [Event] {
+        guard baby != nil else { return [] }
+
         let request = NSFetchRequest<Event>(entityName: "Event")
-        request.predicate = NSPredicate(
-            format: "start >= %@ AND start < %@",
-            start as NSDate,
-            end as NSDate
-        )
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+            eventsBelongTo(baby),
+            NSPredicate(
+                format: "start >= %@ AND start < %@",
+                start as NSDate,
+                end as NSDate
+            )
+        ])
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.start, ascending: true)]
-        if let limit { request.fetchLimit = limit }
 
         do {
             return try database.container.viewContext.fetch(request)
         } catch {
             return []
         }
-    }
-
-    private func endDate(of event: Event) -> Date {
-        if let nursing = event as? NursingEvent { return nursing.end }
-        if let sleep = event as? SleepEvent { return sleep.end }
-        return event.start
     }
 }
 

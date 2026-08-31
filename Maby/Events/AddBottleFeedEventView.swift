@@ -5,6 +5,9 @@ import SwiftUI
 struct AddBottleFeedEventView: View {
     @Injected(Container.eventService) private var eventService
 
+    /// Whose log this entry belongs to.
+    let baby: Baby?
+
     @State private var date = Date.now
     /// The last amount used becomes the default here and for touch-and-hold logging.
     @AppStorage("babyplus.default.bottleMl") private var quantity = 120
@@ -13,7 +16,7 @@ struct AddBottleFeedEventView: View {
         AddEventView(
             "Bottle feed",
             style: .bottle,
-            onAdd: { eventService.addBottle(date: date, amount: quantity) }
+            onAdd: { eventService.addBottle(for: baby, date: date, amount: quantity) }
         ) {
             FieldCard(title: "Amount", systemImage: "drop.fill") {
                 AmountField(milliliters: $quantity, presets: [60, 90, 120, 150, 180])
@@ -35,6 +38,6 @@ struct AddBottleFeedEventView: View {
 
 #if DEBUG
 #Preview {
-    AddBottleFeedEventView()
+    AddBottleFeedEventView(baby: nil)
 }
 #endif

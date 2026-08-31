@@ -17,6 +17,8 @@ struct BabyHeroCardContent: View {
     /// Short summary chips — "4 feeds", "6h sleep", and so on.
     let chips: [HeroChip]
     var accent: Color = Palette.brand
+    /// Shows the chevron that hints the card can be tapped to change profile.
+    var showsSwitcher = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var shimmer = false
@@ -35,11 +37,19 @@ struct BabyHeroCardContent: View {
                     }
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(name)
-                        .font(.system(size: 26, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
+                    HStack(spacing: 6) {
+                        Text(name)
+                            .font(.system(size: 26, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+
+                        if showsSwitcher {
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.caption2.weight(.bold))
+                                .foregroundStyle(.white.opacity(0.7))
+                        }
+                    }
 
                     Text(age)
                         .font(.subheadline)
@@ -93,16 +103,28 @@ struct BabyHeroCardContent: View {
     }
 }
 
-/// The live hero card at the top of the home screen.
+/// The live hero card at the top of the home screen, doubling as the profile
+/// switcher.
+///
+/// The card is the one thing on screen that always says *who* you are looking at,
+/// which makes it the obvious place to change that — so tapping it opens a menu of
+/// profiles rather than jumping straight into an edit form.
 struct BabyHeroCard: View {
+    let baby: Baby?
     let stats: DailyStat?
     var accent: Color = Palette.brand
-    var onTap: (() -> Void)?
+    let onEdit: () -> Void
+    let onAddBaby: () -> Void
+
+    @EnvironmentObject private var activeBaby: ActiveBaby
+    @EnvironmentObject private var subscriptions: SubscriptionService
 
     @FetchRequest(fetchRequest: allBabies)
     private var babies: FetchedResults<Baby>
 
-    private var baby: Baby? { babies.first }
+    private var canAddAnother: Bool {
+        BabyLimit.canAdd(current: babies.count, isSubscribed: subscriptions.isSubscribed)
+    }
 
     private var avatar: String {
         guard let gender = baby?.gender else { return "🍼" }
@@ -128,19 +150,46 @@ struct BabyHeroCard: View {
     }
 
     var body: some View {
-        BabyHeroCardContent(
-            name: baby?.name ?? "Your baby",
-            age: baby.map { "\($0.formattedAge) old" } ?? "Add a baby to get started",
-            avatar: avatar,
-            chips: chips,
-            accent: accent
-        )
-        .contentShape(RoundedRectangle(cornerRadius: Radius.large, style: .continuous))
-        .onTapGesture {
-            guard let onTap else { return }
-            Haptics.tap()
-            onTap()
+        Menu {
+            if babies.count > 1 {
+                Section("Switch to") {
+                    ForEach(babies, id: \.objectID) { candidate in
+                        Button {
+                            withAnimation(Motion.arrive) { activeBaby.select(candidate) }
+                            Haptics.selection()
+                        } label: {
+                            Label(
+                                candidate.name,
+                                systemImage: candidate.id == baby?.id ? "checkmark" : "person.fill"
+                            )
+                        }
+                    }
+                }
+            }
+
+            Button { onEdit() } label: {
+                Label("Baby details", systemImage: "square.and.pencil")
+            }
+
+            Button { onAddBaby() } label: {
+                Label(
+                    canAddAnother ? "Add a baby" : "Add a baby (BabyPlus+)",
+                    systemImage: canAddAnother ? "plus" : "lock.fill"
+                )
+            }
+        } label: {
+            BabyHeroCardContent(
+                name: baby?.name ?? "Your baby",
+                age: baby.map { "\($0.formattedAge) old" } ?? "Add a baby to get started",
+                avatar: avatar,
+                chips: chips,
+                accent: accent,
+                showsSwitcher: babies.count > 1
+            )
         }
+        .buttonStyle(.pressable)
+        .accessibilityLabel(baby.map { "\($0.name), \($0.formattedAge) old" } ?? "No baby yet")
+        .accessibilityHint(babies.count > 1 ? "Opens the profile switcher" : "Opens baby options")
     }
 }
 

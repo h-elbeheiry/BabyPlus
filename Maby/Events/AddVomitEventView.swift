@@ -5,6 +5,9 @@ import SwiftUI
 struct AddVomitEventView: View {
     @Injected(Container.eventService) private var eventService
 
+    /// Whose log this entry belongs to.
+    let baby: Baby?
+
     @State private var date = Date.now
     @State private var quantity = VomitEvent.Quantity.medium
 
@@ -12,7 +15,7 @@ struct AddVomitEventView: View {
         AddEventView(
             "Spit-up",
             style: .vomit,
-            onAdd: { eventService.addVomit(date: date, quantity: quantity) }
+            onAdd: { eventService.addVomit(for: baby, date: date, quantity: quantity) }
         ) {
             FieldCard(title: "How much?", systemImage: "chart.bar.fill") {
                 ChipPicker(
@@ -38,6 +41,6 @@ struct AddVomitEventView: View {
 
 #if DEBUG
 #Preview {
-    AddVomitEventView()
+    AddVomitEventView(baby: nil)
 }
 #endif

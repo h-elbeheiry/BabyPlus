@@ -10,6 +10,9 @@ import SwiftUI
 struct JournalView: View {
     @Injected(Container.eventService) private var eventService
 
+    /// Whose log is on screen.
+    let baby: Baby?
+
     @EnvironmentObject private var subscriptions: SubscriptionService
     @EnvironmentObject private var paywall: PaywallPresenter
     @EnvironmentObject private var toast: ToastCenter
@@ -72,20 +75,21 @@ struct JournalView: View {
         .animation(Motion.arrive, value: sections.count)
         .onAppear(perform: applyHistoryWindow)
         .onChange(of: subscriptions.isSubscribed) { _, _ in applyHistoryWindow() }
+        .onChange(of: baby?.id) { _, _ in applyHistoryWindow() }
     }
 
     // MARK: - Free tier window
 
-    /// Rewrites the fetch predicate whenever entitlement changes, and counts what
-    /// is being held back so we can be specific about it.
+    /// Rewrites the fetch predicate whenever the selected baby or the entitlement
+    /// changes, and counts what is being held back so we can be specific about it.
     private func applyHistoryWindow() {
         if subscriptions.isUnlocked(.fullHistory) {
-            sections.nsPredicate = nil
+            sections.nsPredicate = eventsBelongTo(baby)
             hiddenCount = 0
         } else {
             let horizon = FreeTier.journalHorizon
-            sections.nsPredicate = NSPredicate(format: "start >= %@", horizon as NSDate)
-            hiddenCount = countEvents(before: horizon, in: context)
+            sections.nsPredicate = eventPredicate(baby: baby, since: horizon)
+            hiddenCount = countEvents(for: baby, before: horizon, in: context)
         }
     }
 
@@ -169,7 +173,7 @@ private struct JournalDayHeader: View {
 #Preview {
     ZStack {
         AuroraBackground()
-        JournalView()
+        JournalView(baby: nil)
             .mockedDependencies()
             .environmentObject(SubscriptionService())
             .environmentObject(PaywallPresenter())

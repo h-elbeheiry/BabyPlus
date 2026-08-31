@@ -4,12 +4,15 @@ import SwiftUI
 
 struct AddVomitEventView: View {
     @Injected(Container.eventService) private var eventService
+
+    /// Whose log this entry belongs to.
+    let baby: Baby?
     
     @State private var quantity = VomitEvent.Quantity.little
     
     var body: some View {
         AddEventView(action: {
-            eventService.addVomit(quantity: quantity)
+            eventService.addVomit(for: baby, quantity: quantity)
         }) {
             Picker("Quantity", selection: $quantity) {
                 Text("Little").tag(VomitEvent.Quantity.little)
@@ -24,6 +27,6 @@ struct AddVomitEventView: View {
 
 struct AddVomitEventView_Previews: PreviewProvider {
     static var previews: some View {
-        AddVomitEventView()
+        AddVomitEventView(baby: nil)
     }
 }

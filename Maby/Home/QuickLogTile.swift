@@ -72,16 +72,35 @@ struct QuickLogTileContent: View {
 /// parent with one free hand at 3am should not have to fill in a form, and the
 /// ring that fills under their thumb makes the shortcut discoverable the first
 /// time they rest a finger on a tile.
+/// What a touch-and-hold did, so the tile can react honestly to each outcome.
+enum InstantLogResult {
+    /// An entry was written and can be undone.
+    case logged(Event)
+    /// The gesture started a live timer instead; there is nothing to undo yet.
+    case startedSession
+    /// Nothing was written — usually because there is no baby to write it against.
+    case failed
+
+    var isSuccess: Bool {
+        if case .failed = self { return false }
+        return true
+    }
+}
+
 struct QuickLogTile<E: Event>: View {
     let style: EventStyle
-    /// Long-press action. Returning an event enables the undo toast; returning nil
-    /// means the gesture started something else (a timer, say).
-    let instantLog: () -> Event?
+    /// Whose log this tile reads and writes.
+    let baby: Baby?
+    /// Long-press action.
+    let instantLog: () -> InstantLogResult
     let openDetails: () -> Void
     var showsTimerHint = false
     /// Copy for the confirmation toast, e.g. "Diaper change logged".
     var instantLogMessage: String?
 
+    // Built without a predicate because a `@FetchRequest` is created before the
+    // view can see which baby is selected; `applyBaby()` narrows it on appear and
+    // whenever the selection changes.
     @FetchRequest(fetchRequest: MabyKit.lastEvent())
     private var lastEvent: FetchedResults<E>
 
@@ -120,7 +139,8 @@ struct QuickLogTile<E: Event>: View {
                 holdProgress = pressing ? 1 : 0
             }
         }
-        .onAppear(perform: updateLastTime)
+        .onAppear(perform: applyBaby)
+        .onChange(of: baby?.id) { _, _ in applyBaby() }
         .onReceive(refresh) { _ in updateLastTime() }
         .onReceive(lastEvent.publisher) { _ in updateLastTime() }
         .accessibilityElement(children: .combine)
@@ -132,7 +152,17 @@ struct QuickLogTile<E: Event>: View {
     }
 
     private func performInstantLog() {
-        let saved = instantLog()
+        let result = instantLog()
+
+        guard result.isSuccess else {
+            Haptics.error()
+            toast.show(
+                message: "Add a baby before logging",
+                systemImage: "exclamationmark.circle.fill",
+                tint: .red
+            )
+            return
+        }
 
         withAnimation(Motion.bouncy) { didFire = true }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
@@ -140,7 +170,7 @@ struct QuickLogTile<E: Event>: View {
         }
         updateLastTime()
 
-        guard let saved else { return }
+        guard case .logged(let saved) = result else { return }
         Haptics.success()
         toast.show(
             message: instantLogMessage ?? "\(style.title) logged",
@@ -148,6 +178,11 @@ struct QuickLogTile<E: Event>: View {
             tint: style.tint,
             undo: { EventUndo.delete(saved) }
         )
+    }
+
+    private func applyBaby() {
+        lastEvent.nsPredicate = eventsBelongTo(baby)
+        updateLastTime()
     }
 
     private func updateLastTime() {

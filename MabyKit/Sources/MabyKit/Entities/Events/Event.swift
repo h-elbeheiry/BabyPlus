@@ -14,6 +14,10 @@ public enum EventType: String, CaseIterable, Identifiable, Sendable {
 /// events since that's the way they'll be retrieved.
 public class Event: NSManagedObject, Identifiable {
     @NSManaged public var start: Date
+
+    /// The baby this entry belongs to. Optional in the model because CloudKit
+    /// requires it to be, but every event created through `EventService` has one.
+    @NSManaged public var baby: Baby?
     
     /// Returns the start date without any time to properly group it.
     @objc public var groupStart: Date {

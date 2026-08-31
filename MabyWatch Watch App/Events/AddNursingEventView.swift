@@ -4,6 +4,9 @@ import SwiftUI
 
 struct AddNursingEventView: View {
     @Injected(Container.eventService) private var eventService
+
+    /// Whose log this entry belongs to.
+    let baby: Baby?
     @Environment(\.dismiss) private var dismiss
     
     @State private var duration = 15.0
@@ -26,7 +29,7 @@ struct AddNursingEventView: View {
     
     var body: some View {
         AddEventView(action: {
-            eventService.addNursing(duration: duration, breast: breast)
+            eventService.addNursing(for: baby, duration: duration, breast: breast)
         }) {
             Section("Duration") {
                 VStack(alignment: .leading) {
@@ -53,7 +56,7 @@ struct AddNursingEventView: View {
 struct AddNursingEventView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AddNursingEventView()
+            AddNursingEventView(baby: nil)
         }
     }
 }

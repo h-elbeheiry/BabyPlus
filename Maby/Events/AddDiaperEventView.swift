@@ -5,6 +5,9 @@ import SwiftUI
 struct AddDiaperEventView: View {
     @Injected(Container.eventService) private var eventService
 
+    /// Whose log this entry belongs to.
+    let baby: Baby?
+
     @State private var date = Date.now
     @AppStorage("babyplus.default.diaperType") private var storedType = 0
 
@@ -19,7 +22,7 @@ struct AddDiaperEventView: View {
         AddEventView(
             "Diaper change",
             style: .diaper,
-            onAdd: { eventService.addDiaperChange(date: date, type: diaperType.wrappedValue) }
+            onAdd: { eventService.addDiaperChange(for: baby, date: date, type: diaperType.wrappedValue) }
         ) {
             FieldCard(title: "What did you find?", systemImage: "eye.fill") {
                 ChipPicker(
@@ -46,6 +49,6 @@ struct AddDiaperEventView: View {
 
 #if DEBUG
 #Preview {
-    AddDiaperEventView()
+    AddDiaperEventView(baby: nil)
 }
 #endif

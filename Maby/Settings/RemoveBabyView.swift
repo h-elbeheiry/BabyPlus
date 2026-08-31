@@ -2,23 +2,25 @@ import Factory
 import MabyKit
 import SwiftUI
 
-/// Deleting a baby wipes every entry with it, so the sheet asks for the name to be
-/// confirmed rather than relying on a single red button.
+/// Deleting a baby wipes every entry with it, so the sheet makes the consequence
+/// explicit and requires an acknowledgement rather than relying on a red button.
 struct RemoveBabyView: View {
     @Injected(Container.babyService) private var babyService
     @Environment(\.dismiss) private var dismiss
 
-    @FetchRequest(fetchRequest: allBabies)
-    private var babies: FetchedResults<Baby>
+    let baby: Baby
+    /// Called after the delete goes through, so the caller can move the selection
+    /// on to whoever is left.
+    var onRemoved: (() -> Void)?
 
     @State private var confirmed = false
 
-    private var baby: Baby? { babies.first }
+    private var entryCount: Int { baby.events?.count ?? 0 }
 
     private func remove() {
-        guard let baby else { return }
         babyService.remove(baby: baby)
         Haptics.warning()
+        onRemoved?()
         dismiss()
     }
 
@@ -29,12 +31,12 @@ struct RemoveBabyView: View {
                     .font(.title2)
                     .foregroundStyle(.red)
 
-                Text("Remove \(baby?.name ?? "this baby")?")
+                Text("Remove \(baby.name)?")
                     .font(.title3.weight(.bold))
                     .foregroundStyle(Palette.ink)
             }
 
-            Text("This deletes every feed, nap, change and note along with the profile. It cannot be undone, and it removes them from iCloud too.")
+            Text("This deletes \(baby.name)'s \(entryCount) \(entryCount == 1 ? "entry" : "entries") along with the profile. It cannot be undone, and it removes them from iCloud too. Any other babies you track are unaffected.")
                 .font(.subheadline)
                 .foregroundStyle(Palette.inkSoft)
                 .fixedSize(horizontal: false, vertical: true)
@@ -69,10 +71,3 @@ struct RemoveBabyView: View {
         .frame(maxHeight: .infinity, alignment: .top)
     }
 }
-
-#if DEBUG
-#Preview {
-    RemoveBabyView()
-        .mockedDependencies()
-}
-#endif

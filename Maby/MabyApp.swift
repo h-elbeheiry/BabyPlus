@@ -13,6 +13,7 @@ struct BabyPlusApp: App {
     @StateObject private var paywall = PaywallPresenter()
     @StateObject private var preferences = AppPreferences()
     @StateObject private var toast = ToastCenter()
+    @StateObject private var activeBaby = ActiveBaby()
 
     @Environment(\.scenePhase) private var scenePhase
 
@@ -24,6 +25,7 @@ struct BabyPlusApp: App {
                 .environmentObject(paywall)
                 .environmentObject(preferences)
                 .environmentObject(toast)
+                .environmentObject(activeBaby)
                 .tint(preferences.effectiveAccent(isSubscribed: subscriptions.isSubscribed))
                 .onAppear { preferences.registerLaunch() }
         }

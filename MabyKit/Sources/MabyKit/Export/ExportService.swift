@@ -18,24 +18,26 @@ public final class ExportService {
         case writeFailed
     }
 
-    /// Builds the CSV text for every event, newest first.
-    public func makeCSV(babyName: String?) -> String {
+    /// Builds the CSV text for one baby's events, newest first.
+    public func makeCSV(for baby: Baby) -> String {
         let request = NSFetchRequest<Event>(entityName: "Event")
+        request.predicate = eventsBelongTo(baby)
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.start, ascending: false)]
         let events = (try? database.container.viewContext.fetch(request)) ?? []
+        let babyName = baby.name
 
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime]
 
+        let name = escape(babyName)
         var rows = ["baby,type,start,end,duration_minutes,amount_ml,details"]
 
         for event in events {
-            let baby = escape(babyName ?? "")
             let start = formatter.string(from: event.start)
 
             switch event {
             case let bottle as BottleFeedEvent:
-                rows.append("\(baby),Bottle,\(start),,,\(bottle.quantity),")
+                rows.append("\(name),Bottle,\(start),,,\(bottle.quantity),")
 
             case let nursing as NursingEvent:
                 let minutes = Int(nursing.end.timeIntervalSince(nursing.start) / 60)
@@ -45,11 +47,11 @@ public final class ExportService {
                 case .right: side = "right"
                 case .both: side = "both"
                 }
-                rows.append("\(baby),Nursing,\(start),\(formatter.string(from: nursing.end)),\(minutes),,\(side)")
+                rows.append("\(name),Nursing,\(start),\(formatter.string(from: nursing.end)),\(minutes),,\(side)")
 
             case let sleep as SleepEvent:
                 let minutes = Int(sleep.end.timeIntervalSince(sleep.start) / 60)
-                rows.append("\(baby),Sleep,\(start),\(formatter.string(from: sleep.end)),\(minutes),,")
+                rows.append("\(name),Sleep,\(start),\(formatter.string(from: sleep.end)),\(minutes),,")
 
             case let diaper as DiaperEvent:
                 let kind: String
@@ -59,7 +61,7 @@ public final class ExportService {
                 case .mixed: kind = "mixed"
                 case .clean: kind = "clean"
                 }
-                rows.append("\(baby),Diaper,\(start),,,,\(kind)")
+                rows.append("\(name),Diaper,\(start),,,,\(kind)")
 
             case let vomit as VomitEvent:
                 let size: String
@@ -68,10 +70,10 @@ public final class ExportService {
                 case .medium: size = "medium"
                 case .big: size = "big"
                 }
-                rows.append("\(baby),Spit-up,\(start),,,,\(size)")
+                rows.append("\(name),Spit-up,\(start),,,,\(size)")
 
             default:
-                rows.append("\(baby),Other,\(start),,,,")
+                rows.append("\(name),Other,\(start),,,,")
             }
         }
 
@@ -80,13 +82,13 @@ public final class ExportService {
 
     /// Writes the CSV to a temporary file and returns its URL, ready to hand to a
     /// share sheet.
-    public func writeCSV(babyName: String?) throws -> URL {
-        let csv = makeCSV(babyName: babyName)
+    public func writeCSV(for baby: Baby) throws -> URL {
+        let csv = makeCSV(for: baby)
         guard csv.contains("\n") else { throw ExportError.noData }
 
         let stamp = DateFormatter()
         stamp.dateFormat = "yyyy-MM-dd"
-        let safeName = (babyName ?? "BabyPlus")
+        let safeName = baby.name
             .components(separatedBy: CharacterSet.alphanumerics.inverted)
             .joined(separator: "-")
         let filename = "\(safeName.isEmpty ? "BabyPlus" : safeName)-\(stamp.string(from: .now)).csv"

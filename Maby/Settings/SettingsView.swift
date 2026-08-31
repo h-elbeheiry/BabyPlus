@@ -12,12 +12,15 @@ struct SettingsView: View {
     @EnvironmentObject private var subscriptions: SubscriptionService
     @EnvironmentObject private var paywall: PaywallPresenter
     @EnvironmentObject private var preferences: AppPreferences
+    @EnvironmentObject private var activeBaby: ActiveBaby
 
     @FetchRequest(fetchRequest: allBabies)
     private var babies: FetchedResults<Baby>
 
-    @State private var showingEditBaby = false
-    @State private var showingRemoveBaby = false
+    /// Non-nil while one of the per-profile sheets is up, and the baby it targets.
+    @State private var editing: Baby?
+    @State private var removing: Baby?
+    @State private var showingAddBaby = false
     @State private var showingManageSubscription = false
     @State private var exportURL: URL?
     @State private var notificationsDenied = false
@@ -33,7 +36,7 @@ struct SettingsView: View {
         ScrollView {
             VStack(spacing: 20) {
                 subscriptionCard
-                babyCard
+                babiesCard
                 appearanceCard
                 remindersCard
                 dataCard
@@ -45,11 +48,20 @@ struct SettingsView: View {
         }
         .scrollIndicators(.hidden)
         .softScrollEdges()
-        .sheet(isPresented: $showingEditBaby) { EditBabyDetailsView() }
-        .sheet(isPresented: $showingRemoveBaby) {
-            RemoveBabyView()
-                .presentationDetents([.height(320)])
+        .sheet(item: $editing) { baby in
+            EditBabyDetailsView(baby: baby)
+                .presentationBackground(.regularMaterial)
+                .presentationCornerRadius(32)
+        }
+        .sheet(item: $removing) { baby in
+            RemoveBabyView(baby: baby, onRemoved: { moveSelection(off: baby) })
+                .presentationDetents([.height(360)])
                 .presentationDragIndicator(.visible)
+                .presentationBackground(.regularMaterial)
+                .presentationCornerRadius(32)
+        }
+        .sheet(isPresented: $showingAddBaby) {
+            AddBabyView { baby in activeBaby.select(baby) }
                 .presentationBackground(.regularMaterial)
                 .presentationCornerRadius(32)
         }
@@ -156,27 +168,73 @@ struct SettingsView: View {
         return "Insights, full history, exports, reminders and themes."
     }
 
-    // MARK: - Baby
+    // MARK: - Babies
 
-    private var babyCard: some View {
+    private var selected: Baby? { activeBaby.resolve(in: babies) }
+
+    private var canAddAnother: Bool {
+        BabyLimit.canAdd(current: babies.count, isSubscribed: subscriptions.isSubscribed)
+    }
+
+    private var babiesCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionTitle("Baby")
+            SectionTitle(
+                babies.count > 1 ? "Babies" : "Baby",
+                subtitle: babies.count > 1 ? "Tap one to switch to it" : nil
+            ) {
+                if !subscriptions.isSubscribed && babies.count >= FreeTier.babyProfileLimit {
+                    ProBadge(compact: true)
+                }
+            }
 
-            SettingsRow(
-                title: "Edit details",
-                subtitle: babies.first?.name ?? "No baby yet",
-                systemImage: "person.text.rectangle.fill",
-                tint: Palette.brand
-            ) { showingEditBaby = true }
+            ForEach(babies, id: \.objectID) { baby in
+                BabyRow(
+                    baby: baby,
+                    isSelected: baby.id == selected?.id,
+                    onSelect: {
+                        withAnimation(Motion.snappy) { activeBaby.select(baby) }
+                        Haptics.selection()
+                    },
+                    onEdit: { editing = baby },
+                    onRemove: { removing = baby }
+                )
+            }
 
-            SettingsRow(
-                title: "Remove baby",
-                subtitle: "Deletes every entry too",
-                systemImage: "trash.fill",
-                tint: .red
-            ) { showingRemoveBaby = true }
+            Button(action: addBaby) {
+                HStack(spacing: 10) {
+                    Image(systemName: canAddAnother ? "plus.circle.fill" : "lock.fill")
+                        .font(.callout)
+                    Text(canAddAnother ? "Add a baby" : "Add a baby with BabyPlus+")
+                        .font(.subheadline.weight(.medium))
+                    Spacer(minLength: 0)
+                }
+                .foregroundStyle(canAddAnother ? Palette.brand : Palette.gold)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.pressable)
+            .padding(.top, 2)
         }
         .glassCard()
+    }
+
+    private func addBaby() {
+        Haptics.tap()
+        if canAddAnother {
+            showingAddBaby = true
+        } else {
+            paywall.present(for: .multipleBabies)
+        }
+    }
+
+    /// After a delete, point the selection at whoever is left rather than leaving
+    /// it dangling at a profile that no longer exists.
+    private func moveSelection(off baby: Baby) {
+        guard baby.id == activeBaby.id else { return }
+        if let next = babies.first(where: { $0.id != baby.id }) {
+            activeBaby.select(next)
+        } else {
+            activeBaby.clear()
+        }
     }
 
     // MARK: - Appearance
@@ -273,7 +331,8 @@ struct SettingsView: View {
                     systemImage: "square.and.arrow.up.fill",
                     tint: Palette.brand
                 ) {
-                    exportURL = try? exporter.writeCSV(babyName: babies.first?.name)
+                    guard let selected else { return }
+                    exportURL = try? exporter.writeCSV(for: selected)
                     if exportURL != nil { Haptics.success() }
                 }
             } else {
@@ -348,6 +407,76 @@ private struct SettingsRow: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.pressable)
+    }
+}
+
+/// One profile in the settings list: tap the row to switch to it, use the menu
+/// for the things you do rarely.
+private struct BabyRow: View {
+    let baby: Baby
+    let isSelected: Bool
+    let onSelect: () -> Void
+    let onEdit: () -> Void
+    let onRemove: () -> Void
+
+    private var avatar: String {
+        switch baby.gender {
+        case .girl: return "👶🏻"
+        case .boy: return "👶🏽"
+        case .other: return "🧸"
+        }
+    }
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Button(action: onSelect) {
+                HStack(spacing: 12) {
+                    Text(avatar)
+                        .font(.system(size: 24))
+                        .frame(width: 38, height: 38)
+                        .background(Palette.hairline.opacity(0.6), in: Circle())
+
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(baby.name)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Palette.ink)
+                            .lineLimit(1)
+                        Text("\(baby.formattedAge) old")
+                            .font(.caption2)
+                            .foregroundStyle(Palette.inkSoft)
+                            .lineLimit(1)
+                    }
+
+                    Spacer(minLength: 0)
+
+                    if isSelected {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.callout)
+                            .foregroundStyle(Palette.brand)
+                    }
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.pressable)
+
+            Menu {
+                Button { onEdit() } label: {
+                    Label("Edit details", systemImage: "square.and.pencil")
+                }
+                Button(role: .destructive) { onRemove() } label: {
+                    Label("Remove \(baby.name)", systemImage: "trash")
+                }
+            } label: {
+                Image(systemName: "ellipsis")
+                    .font(.footnote.weight(.bold))
+                    .foregroundStyle(Palette.inkSoft)
+                    .frame(width: 30, height: 30)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityLabel("More options for \(baby.name)")
+        }
+        .padding(.vertical, 2)
+        .accessibilityElement(children: .contain)
     }
 }
 
@@ -440,6 +569,7 @@ private struct ExportShareSheet: UIViewControllerRepresentable {
         AuroraBackground()
         SettingsView()
             .mockedDependencies()
+            .environmentObject(ActiveBaby())
             .environmentObject(SubscriptionService())
             .environmentObject(PaywallPresenter())
             .environmentObject(AppPreferences())

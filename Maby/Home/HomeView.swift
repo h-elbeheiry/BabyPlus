@@ -10,13 +10,19 @@ struct HomeView: View {
     @Injected(Container.statisticsService) private var statistics
 
     @ObservedObject var timer: LiveSessionTimer
+    /// The baby every read and write on this screen is scoped to.
+    let baby: Baby?
 
     @EnvironmentObject private var preferences: AppPreferences
     @EnvironmentObject private var subscriptions: SubscriptionService
     @EnvironmentObject private var toast: ToastCenter
+    @EnvironmentObject private var paywall: PaywallPresenter
+
+    @Environment(\.managedObjectContext) private var context
 
     @State private var sheet: EventType?
     @State private var showingEditBaby = false
+    @State private var showingAddBaby = false
     @State private var todayStats: DailyStat?
 
     /// Remembered so a touch-and-hold repeats what you did last time rather than
@@ -38,9 +44,11 @@ struct HomeView: View {
         ScrollView {
             VStack(spacing: 20) {
                 BabyHeroCard(
+                    baby: baby,
                     stats: todayStats,
                     accent: preferences.effectiveAccent(isSubscribed: subscriptions.isSubscribed),
-                    onTap: { showingEditBaby = true }
+                    onEdit: { showingEditBaby = true },
+                    onAddBaby: addAnotherBaby
                 )
 
                 if timer.isRunning, let session = timer.session {
@@ -72,12 +80,20 @@ struct HomeView: View {
         .softScrollEdges()
         .animation(Motion.arrive, value: timer.isRunning)
         .onAppear(perform: refreshStats)
+        .onChange(of: baby?.id) { _, _ in refreshStats() }
         .onReceive(databaseUpdates) { _ in refreshStats() }
         .sheet(item: $sheet) { type in
-            AddEventSheet(type: type, timer: timer)
+            AddEventSheet(type: type, baby: baby, timer: timer)
         }
         .sheet(isPresented: $showingEditBaby) {
-            EditBabyDetailsView()
+            if let baby {
+                EditBabyDetailsView(baby: baby)
+            }
+        }
+        .sheet(isPresented: $showingAddBaby) {
+            AddBabyView()
+                .presentationBackground(.regularMaterial)
+                .presentationCornerRadius(32)
         }
     }
 
@@ -127,10 +143,12 @@ struct HomeView: View {
         LazyVGrid(columns: columns, spacing: 12) {
             QuickLogTile<NursingEvent>(
                 style: .nursing,
+                baby: baby,
                 instantLog: {
+                    guard baby != nil else { return .failed }
                     let breast = NursingEvent.Breast(rawValue: Int32(defaultBreast)) ?? .left
                     withAnimation(Motion.arrive) { timer.start(.nursing(breast)) }
-                    return nil
+                    return .startedSession
                 },
                 openDetails: { sheet = .nursing },
                 showsTimerHint: true
@@ -138,8 +156,9 @@ struct HomeView: View {
 
             QuickLogTile<BottleFeedEvent>(
                 style: .bottle,
+                baby: baby,
                 instantLog: {
-                    try? eventService.addBottle(amount: defaultBottleMl).get()
+                    log { eventService.addBottle(for: baby, amount: defaultBottleMl) }
                 },
                 openDetails: { sheet = .bottle },
                 instantLogMessage: "\(defaultBottleMl) mL bottle logged"
@@ -147,9 +166,10 @@ struct HomeView: View {
 
             QuickLogTile<DiaperEvent>(
                 style: .diaper,
+                baby: baby,
                 instantLog: {
                     let type = DiaperEvent.DiaperType(rawValue: Int32(defaultDiaperType)) ?? .wet
-                    return try? eventService.addDiaperChange(type: type).get()
+                    return log { eventService.addDiaperChange(for: baby, type: type) }
                 },
                 openDetails: { sheet = .diaper },
                 instantLogMessage: "Diaper change logged"
@@ -157,9 +177,11 @@ struct HomeView: View {
 
             QuickLogTile<SleepEvent>(
                 style: .sleep,
+                baby: baby,
                 instantLog: {
+                    guard baby != nil else { return .failed }
                     withAnimation(Motion.arrive) { timer.start(.sleep) }
-                    return nil
+                    return .startedSession
                 },
                 openDetails: { sheet = .sleep },
                 showsTimerHint: true
@@ -167,8 +189,9 @@ struct HomeView: View {
 
             QuickLogTile<VomitEvent>(
                 style: .vomit,
+                baby: baby,
                 instantLog: {
-                    try? eventService.addVomit(quantity: .medium).get()
+                    log { eventService.addVomit(for: baby, quantity: .medium) }
                 },
                 openDetails: { sheet = .vomit },
                 instantLogMessage: "Spit-up logged"
@@ -178,8 +201,16 @@ struct HomeView: View {
 
     // MARK: - Actions
 
+    /// Adapts a service call into the outcome a quick-log tile reacts to.
+    private func log<E: Event>(_ write: () -> Result<E, AddError>) -> InstantLogResult {
+        switch write() {
+        case .success(let event): return .logged(event)
+        case .failure: return .failed
+        }
+    }
+
     private func stopSession() {
-        guard let saved = timer.stopAndSave() else { return }
+        guard let saved = timer.stopAndSave(for: baby) else { return }
         toast.show(
             message: "Session saved",
             tint: Palette.brand,
@@ -189,7 +220,17 @@ struct HomeView: View {
     }
 
     private func refreshStats() {
-        todayStats = statistics.today()
+        todayStats = statistics.today(for: baby)
+    }
+
+    /// Adding a second profile is where the free plan stops, so the button either
+    /// opens the form or explains why it can't.
+    private func addAnotherBaby() {
+        if BabyLimit.canAdd(current: babyCount(in: context), isSubscribed: subscriptions.isSubscribed) {
+            showingAddBaby = true
+        } else {
+            paywall.present(for: .multipleBabies)
+        }
     }
 
     /// Logging something pushes the matching reminder back, so a well-tracked day
@@ -218,17 +259,19 @@ struct HomeView: View {
 /// details (height, glass background) applied in one place.
 private struct AddEventSheet: View {
     let type: EventType
+    /// Whose log the new entry belongs to.
+    let baby: Baby?
     @ObservedObject var timer: LiveSessionTimer
 
     var body: some View {
         Group {
             switch type {
-            case .bottle: AddBottleFeedEventView()
-            case .diaper: AddDiaperEventView()
-            case .nursing: AddNursingEventView()
-            case .sleep: AddSleepEventView()
-            case .vomit: AddVomitEventView()
-            case .nursingTimer: AddNursingEventView()
+            case .bottle: AddBottleFeedEventView(baby: baby)
+            case .diaper: AddDiaperEventView(baby: baby)
+            case .nursing: AddNursingEventView(baby: baby)
+            case .sleep: AddSleepEventView(baby: baby)
+            case .vomit: AddVomitEventView(baby: baby)
+            case .nursingTimer: AddNursingEventView(baby: baby)
             }
         }
         .presentationDetents([.height(sheetHeight), .large])

@@ -12,10 +12,11 @@ struct UIShowcase<Content: View>: View {
     var callout: String?
     var calloutIcon: String = "hand.tap.fill"
     var accent: Color = Palette.brand
-    @ViewBuilder var content: () -> Content
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
+
+    @ViewBuilder var content: () -> Content
 
     var body: some View {
         VStack(spacing: 12) {

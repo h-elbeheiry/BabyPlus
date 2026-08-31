@@ -36,10 +36,11 @@ final class PaywallPresenter: ObservableObject {
 struct PremiumGate<Content: View>: View {
     let feature: PremiumFeature
     var blurRadius: CGFloat = 14
-    @ViewBuilder var content: () -> Content
 
     @EnvironmentObject private var subscriptions: SubscriptionService
     @EnvironmentObject private var paywall: PaywallPresenter
+
+    @ViewBuilder var content: () -> Content
 
     var body: some View {
         if subscriptions.isUnlocked(feature) {
