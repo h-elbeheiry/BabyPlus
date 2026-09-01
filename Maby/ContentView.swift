@@ -93,7 +93,10 @@ struct ContentView: View {
         .onReceive(databaseUpdates) { _ in
             // Give any sheet that is currently dismissing a moment to finish,
             // otherwise the add-baby sheet is swallowed by the one on its way out.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: syncBabySheet)
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(150))
+                syncBabySheet()
+            }
         }
     }
 

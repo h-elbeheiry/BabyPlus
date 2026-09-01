@@ -6,23 +6,47 @@ struct ContentView: View {
     @FetchRequest(fetchRequest: allBabies)
     private var babies: FetchedResults<Baby>
 
+    /// Same key as iPhone. Watch has its own store, but the meaning stays identical:
+    /// remember who we last logged for, never an object ID.
+    @AppStorage("babyplus.activeBaby") private var activeBabyID = ""
+    @StateObject private var timer = LiveSessionTimer()
+    @State private var showingBabyPicker = false
+
+    /// Honours a remembered profile when there are several; never guesses.
+    private var selectedBaby: Baby? {
+        if babies.isEmpty { return nil }
+        if babies.count == 1 { return babies.first }
+        guard let id = UUID(uuidString: activeBabyID) else { return nil }
+        return babies.first(where: { $0.id == id })
+    }
+
     var body: some View {
         NavigationStack {
-            // In the simulator, Core Data will NEVER sync with CloudKit and
-            // therefore we'd never have any data to show even if there is indeed a
-            // baby already added in the main app. So only run the check in
-            // production builds. Yeah, I know, I know...
-            #if DEBUG
-            AddEventListView(baby: babies.first)
-            #else
-            if babies.isEmpty {
-                noBaby
-            } else if babies.count == 1 {
-                AddEventListView(baby: babies.first)
-            } else {
-                babyPicker
+            Group {
+                if let baby = selectedBaby {
+                    AddEventListView(baby: baby)
+                        .toolbar {
+                            if babies.count > 1 {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    Button(baby.name) { showingBabyPicker = true }
+                                }
+                            }
+                        }
+                } else if babies.isEmpty {
+                    #if DEBUG
+                    // Simulator CloudKit never syncs, so an empty store is normal here.
+                    AddEventListView(baby: nil)
+                    #else
+                    noBaby
+                    #endif
+                } else {
+                    babyPicker
+                }
             }
-            #endif
+        }
+        .environmentObject(timer)
+        .sheet(isPresented: $showingBabyPicker) {
+            babyPicker
         }
     }
 
@@ -41,8 +65,9 @@ struct ContentView: View {
     /// quietly file a feed against the wrong child.
     private var babyPicker: some View {
         List(babies, id: \.objectID) { baby in
-            NavigationLink {
-                AddEventListView(baby: baby)
+            Button {
+                activeBabyID = baby.identifier.uuidString
+                showingBabyPicker = false
             } label: {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(baby.name)
@@ -57,8 +82,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#if DEBUG
+#Preview {
+    ContentView()
 }
+#endif

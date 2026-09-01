@@ -105,6 +105,7 @@ public struct StatsSummary: Equatable, Sendable {
 /// Everything is computed with a single fetch per window and bucketed in memory —
 /// the volume of data one baby produces is tiny, and doing it this way keeps the
 /// aggregation logic testable and independent of Core Data's grouping API.
+@MainActor
 public final class StatisticsService {
     private let database: PersistenceController
     private let calendar: Calendar

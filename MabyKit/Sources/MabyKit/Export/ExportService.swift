@@ -6,6 +6,7 @@ import Foundation
 /// The columns are deliberately flat — one row per event, with a `details` column
 /// that carries whatever is specific to that kind — so the file opens cleanly in
 /// Numbers, Excel or Sheets without anyone having to understand our data model.
+@MainActor
 public final class ExportService {
     private let database: PersistenceController
 

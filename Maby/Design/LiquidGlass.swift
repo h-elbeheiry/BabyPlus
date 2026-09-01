@@ -96,7 +96,7 @@ extension View {
     /// Tags a glass surface so sibling surfaces inside the same ``GlassStack`` can
     /// morph into one another instead of cross-fading.
     @ViewBuilder
-    func glassMorphID(_ id: some Hashable, in namespace: Namespace.ID) -> some View {
+    func glassMorphID(_ id: some Hashable & Sendable, in namespace: Namespace.ID) -> some View {
         if #available(iOS 26.0, *) {
             self.glassEffectID(id, in: namespace)
         } else {

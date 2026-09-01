@@ -17,7 +17,7 @@ struct OnboardingFlow: View {
     @State private var page = 0
     @State private var showingPaywall = false
 
-    private var steps: [OnboardingStep] { OnboardingStep.all }
+    private var steps: [OnboardingStep] { Array(OnboardingStep.allCases) }
 
     /// Pages: the walkthrough, then the baby form as the final page.
     private var totalPages: Int { steps.count + 1 }
@@ -127,50 +127,56 @@ struct OnboardingFlow: View {
 // MARK: - Step model
 
 /// One walkthrough page: a sentence, and the live example that goes with it.
-struct OnboardingStep: Identifiable {
-    let id: String
-    let eyebrow: String
-    let title: String
-    let body: String
-    let showcase: AnyView
+enum OnboardingStep: String, CaseIterable, Identifiable, Sendable {
+    case welcome, quicklog, journal, timers, insights
 
-    static let all: [OnboardingStep] = [
-        OnboardingStep(
-            id: "welcome",
-            eyebrow: "Welcome to BabyPlus",
-            title: "One place for the whole day",
-            body: "Feeds, naps, changes and the odd spit-up — all in one log, so nobody has to remember whether it was five or six.",
-            showcase: AnyView(WelcomeShowcase())
-        ),
-        OnboardingStep(
-            id: "quicklog",
-            eyebrow: "Logging",
-            title: "One touch, one hand",
-            body: "Tap a tile to fill in the details. Touch and hold it to log the whole thing straight away — with an Undo, in case a thumb slips.",
-            showcase: AnyView(QuickLogShowcase())
-        ),
-        OnboardingStep(
-            id: "journal",
-            eyebrow: "Journal",
-            title: "A timeline you can actually read",
-            body: "Every entry in plain language, grouped by day, with the time and duration where they matter.",
-            showcase: AnyView(JournalShowcase())
-        ),
-        OnboardingStep(
-            id: "timers",
-            eyebrow: "Timers",
-            title: "Start it and forget it",
-            body: "Nursing and naps run on a live timer that keeps going while your phone is locked, and picks up where it left off if the app closes.",
-            showcase: AnyView(TimersShowcase())
-        ),
-        OnboardingStep(
-            id: "insights",
-            eyebrow: "Insights",
-            title: "Turn the log into an answer",
-            body: "BabyPlus+ charts feeding, sleep and diapers over time, keeps your full history, adds a profile per child, and exports the lot as a spreadsheet.",
-            showcase: AnyView(InsightsShowcase())
-        )
-    ]
+    var id: String { rawValue }
+
+    var eyebrow: String {
+        switch self {
+        case .welcome: return "Welcome to BabyPlus"
+        case .quicklog: return "Logging"
+        case .journal: return "Journal"
+        case .timers: return "Timers"
+        case .insights: return "Insights"
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .welcome: return "One place for the whole day"
+        case .quicklog: return "One touch, one hand"
+        case .journal: return "A timeline you can actually read"
+        case .timers: return "Start it and forget it"
+        case .insights: return "Turn the log into an answer"
+        }
+    }
+
+    var body: String {
+        switch self {
+        case .welcome:
+            return "Feeds, naps, changes and the odd spit-up — all in one log, so nobody has to remember whether it was five or six."
+        case .quicklog:
+            return "Tap a tile to fill in the details. Touch and hold it to log the whole thing straight away — with an Undo, in case a thumb slips."
+        case .journal:
+            return "Every entry in plain language, grouped by day, with the time and duration where they matter."
+        case .timers:
+            return "Nursing and naps run on a live timer that keeps going while your phone is locked, and picks up where it left off if the app closes."
+        case .insights:
+            return "BabyPlus+ charts feeding, sleep and diapers over time, keeps your full history, adds a profile per child, and exports the lot as a spreadsheet."
+        }
+    }
+
+    @ViewBuilder
+    var showcase: some View {
+        switch self {
+        case .welcome: WelcomeShowcase()
+        case .quicklog: QuickLogShowcase()
+        case .journal: JournalShowcase()
+        case .timers: TimersShowcase()
+        case .insights: InsightsShowcase()
+        }
+    }
 }
 
 // MARK: - Page

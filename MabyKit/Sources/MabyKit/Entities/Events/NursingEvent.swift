@@ -3,7 +3,7 @@ import Foundation
 
 /// Represents an event of nursing the baby, which includes and end date.
 public final class NursingEvent: Event {
-    @objc public enum Breast: Int32, CaseIterable {
+    @objc public enum Breast: Int32, CaseIterable, Sendable {
         case left, right, both
     }
     

@@ -21,7 +21,7 @@ struct AddVomitEventView: View {
             }
             .pickerStyle(.inline)
         }
-        .navigationBarTitle("🤢 Vomit")
+        .navigationTitle("🤢 Vomit")
     }
 }
 

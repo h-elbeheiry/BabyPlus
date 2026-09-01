@@ -7,28 +7,34 @@ struct AddBottleFeedEventView: View {
 
     /// Whose log this entry belongs to.
     let baby: Baby?
-    @Environment(\.dismiss) private var dismiss
-    
-    @State private var amount = 100.0
-    
+
+    /// The last amount used, same key as iPhone so a watch log feels like a hold-to-log.
+    @AppStorage("babyplus.default.bottleMl") private var quantity = 120
+
     private var formattedAmount: String {
         let amountWithMeasurement = Measurement(
-            value: amount,
+            value: Double(quantity),
             unit: UnitVolume.milliliters
         )
-        
         return formatMl(amount: amountWithMeasurement)
     }
-    
+
     var body: some View {
         AddEventView(action: {
-            eventService.addBottle(for: baby, amount: Int(amount.rounded(.up)))
+            eventService.addBottle(for: baby, amount: quantity)
         }) {
             Section("Amount") {
                 VStack(alignment: .leading) {
                     Text(formattedAmount)
-                    
-                    Slider(value: $amount, in: 0...1000, step: 50) {
+
+                    Slider(
+                        value: Binding(
+                            get: { Double(quantity) },
+                            set: { quantity = Int($0.rounded()) }
+                        ),
+                        in: 30...300,
+                        step: 10
+                    ) {
                         Text("Amount")
                     }
                 }
@@ -39,10 +45,10 @@ struct AddBottleFeedEventView: View {
     }
 }
 
-struct AddBottleFeedEventView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            AddBottleFeedEventView(baby: nil)
-        }
+#if DEBUG
+#Preview {
+    NavigationStack {
+        AddBottleFeedEventView(baby: nil)
     }
 }
+#endif

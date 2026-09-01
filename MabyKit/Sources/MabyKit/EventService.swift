@@ -2,7 +2,8 @@ import CoreData
 import Logging
 import Foundation
 
-public class EventService {
+@MainActor
+public final class EventService {
     let database: PersistenceController
     let logger: Logger
 

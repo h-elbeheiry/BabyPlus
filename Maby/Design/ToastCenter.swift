@@ -33,7 +33,7 @@ final class ToastCenter: ObservableObject {
         }
 
         dismissTask = Task { [weak self] in
-            try? await Task.sleep(nanoseconds: 4_200_000_000)
+            try? await Task.sleep(for: .seconds(4.2))
             guard !Task.isCancelled else { return }
             self?.dismiss()
         }

@@ -3,6 +3,7 @@ import UIKit
 
 /// Small wrapper so call sites read as intent ("Haptics.success()") rather than as
 /// UIKit plumbing, and so we can silence feedback in one place if we ever need to.
+@MainActor
 enum Haptics {
     static func tap(_ intensity: UIImpactFeedbackGenerator.FeedbackStyle = .light) {
         let generator = UIImpactFeedbackGenerator(style: intensity)

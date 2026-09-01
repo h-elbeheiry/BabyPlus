@@ -1,18 +1,19 @@
 import MabyKit
 import SwiftUI
 
-private enum ButtonState {
-    case resting, loading, success, errored
+private enum ButtonState: Equatable {
+    case resting, loading, success
+    case failed(AddError)
 }
 
 struct AddEventView<Content: View, E: Event>: View {
     @Environment(\.dismiss) private var dismiss
-    
+
     let content: Content
     let onAdd: () -> Result<E, AddError>
-    
+
     @State private var buttonState: ButtonState = .resting
-    
+
     init(
         action: @escaping () -> Result<E, AddError>,
         @ViewBuilder _ content: () -> Content
@@ -20,59 +21,52 @@ struct AddEventView<Content: View, E: Event>: View {
         self.content = content()
         self.onAdd = action
     }
-    
+
     private var disableAddButton: Bool {
-        [
-            ButtonState.loading,
-            ButtonState.success,
-            ButtonState.errored
-        ].contains(buttonState)
+        buttonState != .resting
     }
-    
+
     private var buttonTint: Color {
         switch buttonState {
-        case .resting:
-            fallthrough
-        case .loading:
-            return Color.blue
-        case .success:
-            return Color.green
-        case .errored:
-            return Color.red
+        case .resting, .loading: return .blue
+        case .success: return .green
+        case .failed: return .red
         }
     }
-    
+
+    private func message(for error: AddError) -> String {
+        switch error {
+        case .invalidData: return "Check the times"
+        case .noBaby: return "Pick a baby first"
+        case .databaseError: return "Couldn't save"
+        }
+    }
+
     private func addAndDismiss() {
         buttonState = .loading
-        
-        let result = onAdd()
-        
-        switch result {
-        case .success(_):
+
+        switch onAdd() {
+        case .success:
             buttonState = .success
-            
             WKInterfaceDevice.current().play(.success)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(800))
                 dismiss()
             }
-            
-            return
-        case .failure(_):
-            buttonState = .errored
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+        case .failure(let error):
+            buttonState = .failed(error)
+            WKInterfaceDevice.current().play(.failure)
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(2.5))
                 buttonState = .resting
             }
-            
-            return
         }
     }
-    
+
     var body: some View {
         Form {
             content
-            
+
             Button(action: addAndDismiss) {
                 switch buttonState {
                 case .resting:
@@ -81,8 +75,8 @@ struct AddEventView<Content: View, E: Event>: View {
                     Text("Adding...")
                 case .success:
                     Text("Added!")
-                case .errored:
-                    Text("Try again...")
+                case .failed(let error):
+                    Text(message(for: error))
                 }
             }
             .disabled(disableAddButton)
@@ -93,10 +87,10 @@ struct AddEventView<Content: View, E: Event>: View {
     }
 }
 
-struct AddEventView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddEventView(action: { .failure(.databaseError) }) {
-            Text("Hello!")
-        }
+#if DEBUG
+#Preview {
+    AddEventView(action: { .failure(.databaseError) }) {
+        Text("Hello!")
     }
 }
+#endif

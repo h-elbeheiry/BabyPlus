@@ -165,7 +165,8 @@ struct QuickLogTile<E: Event>: View {
         }
 
         withAnimation(Motion.bouncy) { didFire = true }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(700))
             withAnimation(Motion.snappy) { didFire = false }
         }
         updateLastTime()
@@ -204,7 +205,7 @@ struct QuickLogTile<E: Event>: View {
     }
 }
 
-/// Deleting a just-created event, shared by every undo affordance.
+@MainActor
 enum EventUndo {
     static func delete(_ event: Event) {
         Container.eventService().delete(events: [event])

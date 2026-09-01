@@ -1,4 +1,4 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
     name: "MabyKit",
     platforms: [
-        .iOS("18.0"),
-        .watchOS("11.0")
+        .iOS(.v18),
+        .watchOS(.v11)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -34,5 +34,6 @@ let package = Package(
         .testTarget(
             name: "MabyKitTests",
             dependencies: ["MabyKit"]),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

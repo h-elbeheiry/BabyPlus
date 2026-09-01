@@ -7,14 +7,21 @@ struct AddDiaperEventView: View {
 
     /// Whose log this entry belongs to.
     let baby: Baby?
-    
-    @State private var diaperType: DiaperEvent.DiaperType = .wet
-    
+
+    @AppStorage("babyplus.default.diaperType") private var storedType = 0
+
+    private var diaperType: Binding<DiaperEvent.DiaperType> {
+        Binding(
+            get: { DiaperEvent.DiaperType(rawValue: Int32(storedType)) ?? .wet },
+            set: { storedType = Int($0.rawValue) }
+        )
+    }
+
     var body: some View {
         AddEventView(action: {
-            eventService.addDiaperChange(for: baby, type: diaperType)
+            eventService.addDiaperChange(for: baby, type: diaperType.wrappedValue)
         }) {
-            Picker("Diaper type", selection: $diaperType) {
+            Picker("Diaper type", selection: diaperType) {
                 Text("Wet").tag(DiaperEvent.DiaperType.wet)
                 Text("Dirty").tag(DiaperEvent.DiaperType.dirty)
                 Text("Mixed").tag(DiaperEvent.DiaperType.mixed)
@@ -22,12 +29,12 @@ struct AddDiaperEventView: View {
             }
             .pickerStyle(.inline)
         }
-        .navigationBarTitle("🧷 Diaper")
+        .navigationTitle("🧷 Diaper")
     }
 }
 
-struct AddDiaperEventView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddDiaperEventView(baby: nil)
-    }
+#if DEBUG
+#Preview {
+    AddDiaperEventView(baby: nil)
 }
+#endif

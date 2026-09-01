@@ -7,6 +7,7 @@ import UserNotifications
 /// parent wants to know is "it has been three hours since the last feed", not
 /// "it is 3pm". Every time an event is logged the relevant reminder is pushed
 /// back, so a well-tracked day is a quiet day.
+@MainActor
 public final class ReminderService {
 
     public enum Kind: String, CaseIterable, Identifiable, Sendable {

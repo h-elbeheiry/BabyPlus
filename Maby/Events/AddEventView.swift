@@ -132,11 +132,17 @@ struct AddEventView<Content: View, E: Event>: View {
         case .success:
             state = .saved
             Haptics.success()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) { dismiss() }
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(550))
+                dismiss()
+            }
         case .failure(let error):
             state = .failed(error)
             Haptics.error()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { state = .resting }
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(2.5))
+                state = .resting
+            }
         }
     }
 }

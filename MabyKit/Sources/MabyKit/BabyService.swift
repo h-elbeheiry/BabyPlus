@@ -6,7 +6,8 @@ public func isValidBaby(name: String, birthday: Date) -> Bool {
     !name.isEmpty && birthday < Date.now
 }
 
-public class BabyService {
+@MainActor
+public final class BabyService {
     let database: PersistenceController
     let logger: Logger
 

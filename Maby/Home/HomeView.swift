@@ -56,7 +56,10 @@ struct HomeView: View {
                         session: session,
                         elapsed: timer.elapsed,
                         onStop: stopSession,
-                        onCancel: { withAnimation(Motion.snappy) { timer.cancel() } }
+                        onCancel: {
+                            withAnimation(Motion.snappy) { timer.cancel() }
+                            Haptics.warning()
+                        }
                     )
                     .transition(.rise)
                 }
@@ -147,7 +150,10 @@ struct HomeView: View {
                 instantLog: {
                     guard baby != nil else { return .failed }
                     let breast = NursingEvent.Breast(rawValue: Int32(defaultBreast)) ?? .left
-                    withAnimation(Motion.arrive) { timer.start(.nursing(breast)) }
+                    withAnimation(Motion.arrive) {
+                        timer.start(.nursing(breast))
+                        Haptics.tap(.medium)
+                    }
                     return .startedSession
                 },
                 openDetails: { sheet = .nursing },
@@ -180,7 +186,10 @@ struct HomeView: View {
                 baby: baby,
                 instantLog: {
                     guard baby != nil else { return .failed }
-                    withAnimation(Motion.arrive) { timer.start(.sleep) }
+                    withAnimation(Motion.arrive) {
+                        timer.start(.sleep)
+                        Haptics.tap(.medium)
+                    }
                     return .startedSession
                 },
                 openDetails: { sheet = .sleep },
@@ -210,7 +219,11 @@ struct HomeView: View {
     }
 
     private func stopSession() {
-        guard let saved = timer.stopAndSave(for: baby) else { return }
+        guard let saved = timer.stopAndSave(for: baby) else {
+            Haptics.error()
+            return
+        }
+        Haptics.success()
         toast.show(
             message: "Session saved",
             tint: Palette.brand,

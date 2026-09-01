@@ -71,31 +71,31 @@ struct QuickLogShowcase: View {
                 .frame(height: 34)
             }
         }
-        .onAppear(perform: playLoop)
+        .task { await playLoop() }
     }
 
     /// Runs the press → fill → confirm sequence on repeat. Reduce Motion gets the
-    /// end state instead of the animation.
-    private func playLoop() {
+    /// end state instead of the animation. `.task` cancels the loop when the page
+    /// leaves, so we don't keep scheduling work after onboarding is gone.
+    private func playLoop() async {
         guard !reduceMotion else {
             hold = 1
             showToast = true
             return
         }
 
-        func cycle() {
+        try? await Task.sleep(for: .milliseconds(500))
+        while !Task.isCancelled {
             withAnimation(.linear(duration: 0.9)) { hold = 1 }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.95) {
-                withAnimation(Motion.bouncy) { showToast = true }
-                withAnimation(.easeOut(duration: 0.3)) { hold = 0 }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.9) {
-                withAnimation(Motion.snappy) { showToast = false }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.6, execute: cycle)
+            try? await Task.sleep(for: .milliseconds(950))
+            guard !Task.isCancelled else { return }
+            withAnimation(Motion.bouncy) { showToast = true }
+            withAnimation(.easeOut(duration: 0.3)) { hold = 0 }
+            try? await Task.sleep(for: .milliseconds(1950))
+            guard !Task.isCancelled else { return }
+            withAnimation(Motion.snappy) { showToast = false }
+            try? await Task.sleep(for: .milliseconds(700))
         }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: cycle)
     }
 }
 
@@ -149,15 +149,15 @@ struct JournalShowcase: View {
                 }
             }
         }
-        .onAppear {
+        .task {
             guard !reduceMotion else {
                 visible = rows.count
                 return
             }
             for index in 0...rows.count {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25 + Double(index) * 0.18) {
-                    withAnimation(Motion.arrive) { visible = index }
-                }
+                try? await Task.sleep(for: .milliseconds(index == 0 ? 250 : 180))
+                guard !Task.isCancelled else { return }
+                withAnimation(Motion.arrive) { visible = index }
             }
         }
     }

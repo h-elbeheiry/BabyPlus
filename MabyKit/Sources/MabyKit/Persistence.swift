@@ -1,6 +1,9 @@
 import CoreData
 
-public struct PersistenceController {
+/// Shared Core Data stack. Every service that touches `viewContext` is `@MainActor`,
+/// so the container is only used from the main thread even though Core Data's types
+/// aren't themselves Sendable.
+public struct PersistenceController: @unchecked Sendable {
     public static let shared = PersistenceController()
 
     let container: NSPersistentContainer
@@ -81,7 +84,7 @@ public struct PersistenceController {
 extension PersistenceController {
     /// An in-memory store with two babies and a plausible day of entries for the
     /// first of them, used by previews.
-    public static var preview: PersistenceController = {
+    public static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
 
