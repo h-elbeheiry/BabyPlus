@@ -30,6 +30,20 @@ enum GlassStyle {
         case .regular, .tinted: return false
         }
     }
+
+    @available(iOS 26.0, *)
+    var systemGlass: Glass {
+        switch self {
+        case .regular:
+            return .regular
+        case .tinted(let color):
+            return .regular.tint(color)
+        case .interactive:
+            return .regular.interactive()
+        case .interactiveTinted(let color):
+            return .regular.tint(color).interactive()
+        }
+    }
 }
 
 // MARK: - Glass surfaces
@@ -42,10 +56,7 @@ extension View {
         in shape: some Shape = RoundedRectangle(cornerRadius: Radius.large, style: .continuous)
     ) -> some View {
         if #available(iOS 26.0, *) {
-            var glass = Glass.regular
-            if let tint = style.tint { glass = glass.tint(tint) }
-            if style.isInteractive { glass = glass.interactive() }
-            self.glassEffect(glass, in: shape)
+            self.glassEffect(style.systemGlass, in: shape)
         } else {
             self
                 .background(.ultraThinMaterial, in: shape)

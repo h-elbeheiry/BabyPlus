@@ -1,14 +1,6 @@
 {
+  "originHash" : "82e600fb97dbdd6a0963ea9d8da0e92e148de3cc1460f87927a0dd35633b9c73",
   "pins" : [
-    {
-      "identity" : "animatedtabbar",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/exyte/AnimatedTabBar.git",
-      "state" : {
-        "revision" : "1eef24600ecb6882ff81445dbf1b02537e74c4b3",
-        "version" : "0.1.1"
-      }
-    },
     {
       "identity" : "factory",
       "kind" : "remoteSourceControl",
@@ -19,15 +11,6 @@
       }
     },
     {
-      "identity" : "scalingheaderscrollview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/exyte/ScalingHeaderScrollView",
-      "state" : {
-        "revision" : "5b90bb4e58489d77f3ed787e0535aed57edbcfdf",
-        "version" : "0.1.5"
-      }
-    },
-    {
       "identity" : "swift-log",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
@@ -35,16 +18,7 @@
         "revision" : "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
         "version" : "1.4.2"
       }
-    },
-    {
-      "identity" : "swiftui-introspect",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/siteline/SwiftUI-Introspect.git",
-      "state" : {
-        "revision" : "6dce3c8f5bfa8bc20120c7497da27e984a8813aa",
-        "version" : "0.7.0"
-      }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

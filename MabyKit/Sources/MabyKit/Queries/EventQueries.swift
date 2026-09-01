@@ -53,7 +53,7 @@ public func eventsBelongTo(_ baby: Baby?) -> NSPredicate {
     return NSPredicate(format: "baby == %@", baby)
 }
 
-func eventPredicate(baby: Baby?, since: Date?) -> NSPredicate {
+public func eventPredicate(baby: Baby?, since: Date?) -> NSPredicate {
     var parts = [eventsBelongTo(baby)]
     if let since {
         parts.append(NSPredicate(format: "start >= %@", since as NSDate))
